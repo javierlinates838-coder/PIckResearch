@@ -1,11 +1,8 @@
 import {
-  BarChart3,
   Goal,
   Newspaper,
-  Shield,
   Star,
   Trophy,
-  Users,
 } from "lucide-react";
 
 export const mainNavigation = [
@@ -15,19 +12,9 @@ export const mainNavigation = [
     icon: Goal,
   },
   {
-    href: "/dashboard",
-    label: "Dashboard",
-    icon: BarChart3,
-  },
-  {
     href: "/players",
     label: "Players",
     icon: Star,
-  },
-  {
-    href: "/teams",
-    label: "Teams",
-    icon: Shield,
   },
   {
     href: "/news",
@@ -35,13 +22,8 @@ export const mainNavigation = [
     icon: Newspaper,
   },
   {
-    href: "/dashboard#saved",
+    href: "/finder#builder",
     label: "Saved",
     icon: Trophy,
-  },
-  {
-    href: "/dashboard#community",
-    label: "Market",
-    icon: Users,
   },
 ] as const;

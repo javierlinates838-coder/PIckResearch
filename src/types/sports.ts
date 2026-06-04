@@ -242,3 +242,49 @@ export interface PickOpportunity {
   tags: string[];
   rationale: string;
 }
+
+export interface DfsGameLog {
+  id: string;
+  playedAt: string;
+  opponent: string;
+  minutes: number;
+  points?: number;
+  rebounds?: number;
+  assists?: number;
+  threePointers?: number;
+  shots?: number;
+  strikeouts?: number;
+  kills?: number;
+  value: number;
+  line: number;
+  hit: boolean;
+}
+
+export interface DfsPlayerResearch {
+  player: Player;
+  team: Team;
+  primaryMarket: MarketType;
+  currentLine: number;
+  projection: number;
+  last5Average: number;
+  last10Average: number;
+  last15Average: number;
+  seasonAverage: number;
+  l5HitRate: number;
+  l10HitRate: number;
+  l15HitRate: number;
+  seasonHitRate: number;
+  streak: number;
+  consistencyScore: number;
+  usageTrendPct: number;
+  minutesTrendPct: number;
+  matchup: {
+    opponent: string;
+    defenseVsPositionRank: number;
+    note: string;
+  };
+  injuryStatus: "clear" | "monitor" | "questionable" | "out";
+  logs: DfsGameLog[];
+  availableProps: PickOpportunity[];
+  source: ResearchDataSource;
+}
