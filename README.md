@@ -74,6 +74,8 @@ The app uses mock provider data for local development until live provider adapte
 
 The dashboard displays source badges, provider warnings, and live/demo status so users can tell what is trustworthy live data versus placeholder research scaffolding.
 
+Important: `THE_ODDS_API_KEY` and `NEWSAPI_API_KEY` do not populate Finder players or DFS prop stat logs. They power dashboard odds/news only. To make `/finder`, `/players`, and `/players/[id]` live, connect and implement a DFS projections/stat-log provider via `DFS_PROPS_API_KEY` or a Supabase ingestion pipeline.
+
 ### Vercel Environment Variable Troubleshooting
 
 If Vercel is not reading provider keys:

@@ -4,7 +4,7 @@ import { PickFinderBoard } from "@/components/finder/pick-finder-board";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { supportedSports } from "@/config/sports";
-import { listPickOpportunities } from "@/lib/repositories/research";
+import { getDfsSummary, listPickOpportunities } from "@/lib/repositories/research";
 import { finderQuerySchema } from "@/lib/validators/research";
 
 export const metadata: Metadata = {
@@ -29,14 +29,17 @@ export default async function FinderPage({
     minHitRate: typeof params.minHitRate === "string" ? params.minHitRate : undefined,
   });
   const filters = parsed.success ? parsed.data : { sort: "edge" as const };
-  const opportunities = await listPickOpportunities({
-    sport: filters.sport,
-    query: filters.q,
-    market: filters.market,
-    app: filters.app,
-    minHitRate: filters.minHitRate,
-    sort: filters.sort,
-  });
+  const [opportunities, dfsSummary] = await Promise.all([
+    listPickOpportunities({
+      sport: filters.sport,
+      query: filters.q,
+      market: filters.market,
+      app: filters.app,
+      minHitRate: filters.minHitRate,
+      sort: filters.sort,
+    }),
+    getDfsSummary(),
+  ]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -129,6 +132,27 @@ export default async function FinderPage({
         </form>
       </Card>
 
+      <Card className="mb-6 border-fuchsia-300/20 bg-fuchsia-500/10">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <Badge variant={dfsSummary.providerConfigured ? "positive" : "warning"}>
+              {dfsSummary.providerConfigured ? "DFS provider key detected" : "Demo DFS player pool"}
+            </Badge>
+            <p className="mt-3 text-sm leading-6 text-fuchsia-50/85">
+              Your odds/news API keys do not populate Finder players. Finder needs a DFS
+              projections/stat-log provider. Current searchable pool: {dfsSummary.playerCount} demo
+              players and {dfsSummary.propCount} demo prop rows across {dfsSummary.sports.join(", ")}.
+            </p>
+          </div>
+          <a
+            href="/api/providers/status"
+            className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-300/20"
+          >
+            Provider status
+          </a>
+        </div>
+      </Card>
+
       <div className="mb-6 flex flex-wrap gap-2">
         <Badge variant="info">L5/L10/L15</Badge>
         <Badge variant="info">H2H</Badge>
@@ -148,6 +172,7 @@ export default async function FinderPage({
           sort: filters.sort,
           minHitRate: filters.minHitRate,
         }}
+        dataSummary={dfsSummary}
       />
     </div>
   );

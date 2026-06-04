@@ -40,6 +40,7 @@ const theOddsApiPublicKeyAliases = [
   "NEXT_PUBLIC_THE_ODDS_API_KEY",
   "NEXT_PUBLIC_ODDS_API_KEY",
 ] as const;
+const dfsPropsPrivateKeyAliases = ["DFS_PROPS_API_KEY", "PROPS_API_KEY", "DFS_API_KEY"] as const;
 
 function findConfiguredEnvName(names: readonly string[]) {
   return names.find((name) => Boolean(process.env[name]));
@@ -59,9 +60,14 @@ export function getTheOddsApiKey() {
   return getEnvValue(theOddsApiPrivateKeyAliases);
 }
 
+export function getDfsPropsApiKey() {
+  return getEnvValue(dfsPropsPrivateKeyAliases);
+}
+
 export function getProviderStatus() {
   const newsApiDetectedAlias = findConfiguredEnvName(newsApiPrivateKeyAliases);
   const theOddsApiDetectedAlias = findConfiguredEnvName(theOddsApiPrivateKeyAliases);
+  const dfsPropsDetectedAlias = findConfiguredEnvName(dfsPropsPrivateKeyAliases);
 
   return {
     newsapi: {
@@ -70,6 +76,8 @@ export function getProviderStatus() {
       acceptedAliases: [...newsApiPrivateKeyAliases],
       detectedAlias: newsApiDetectedAlias ?? null,
       publicKeyDetected: Boolean(findConfiguredEnvName(newsApiPublicKeyAliases)),
+      powers: ["dashboard.news", "news.feed"],
+      doesNotPower: ["finder.players", "finder.props", "player.statLogs"],
       baseUrl: process.env.NEWSAPI_BASE_URL ?? "https://newsapi.org/v2",
       language: process.env.NEWSAPI_LANGUAGE ?? "en",
       sortBy: process.env.NEWSAPI_SORT_BY ?? "publishedAt",
@@ -81,11 +89,22 @@ export function getProviderStatus() {
       acceptedAliases: [...theOddsApiPrivateKeyAliases],
       detectedAlias: theOddsApiDetectedAlias ?? null,
       publicKeyDetected: Boolean(findConfiguredEnvName(theOddsApiPublicKeyAliases)),
+      powers: ["dashboard.games", "dashboard.odds"],
+      doesNotPower: ["finder.players", "finder.props", "player.statLogs"],
       baseUrl: process.env.THE_ODDS_API_BASE_URL ?? "https://api.the-odds-api.com/v4",
       regions: process.env.THE_ODDS_API_REGIONS ?? "us",
       markets: process.env.THE_ODDS_API_MARKETS ?? "h2h,spreads,totals",
       oddsFormat: process.env.THE_ODDS_API_ODDS_FORMAT ?? "american",
       dateFormat: process.env.THE_ODDS_API_DATE_FORMAT ?? "iso",
+    },
+    dfsProps: {
+      configured: Boolean(getDfsPropsApiKey()),
+      expectedKey: "DFS_PROPS_API_KEY",
+      acceptedAliases: [...dfsPropsPrivateKeyAliases],
+      detectedAlias: dfsPropsDetectedAlias ?? null,
+      powers: ["finder.players", "finder.props", "player.statLogs"],
+      note:
+        "A DFS projections/stat-log provider is required to expand Finder and Players beyond demo rows.",
     },
   };
 }

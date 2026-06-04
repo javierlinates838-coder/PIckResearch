@@ -1,6 +1,7 @@
 import { getProviderStatus } from "@/config/providers";
 import {
   getDfsPlayerResearch,
+  getDfsDataSummary,
   listDfsOpportunities,
   listDfsPlayers,
 } from "@/lib/dfs/props-data";
@@ -222,6 +223,10 @@ export async function getPlayerResearch(playerId: string) {
 
 export async function getDfsResearch(playerId: string) {
   return getDfsPlayerResearch(playerId);
+}
+
+export async function getDfsSummary() {
+  return getDfsDataSummary();
 }
 
 export async function listTeams(filters?: { sport?: SportKey; query?: string }) {

@@ -6,6 +6,16 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { Metric } from "@/components/ui/metric";
 import type { MarketType, PickApp, PickOpportunity, SportKey } from "@/types/sports";
 
+interface DfsDataSummary {
+  source: "demo";
+  playerCount: number;
+  propCount: number;
+  sports: SportKey[];
+  markets: MarketType[];
+  providerConfigured: boolean;
+  expectedProviderKey: string;
+}
+
 const marketOptions: { label: string; value: MarketType }[] = [
   { label: "Points", value: "player_points" },
   { label: "Rebounds", value: "player_rebounds" },
@@ -51,6 +61,7 @@ function confidenceVariant(value: number) {
 export function PickFinderBoard({
   opportunities,
   filters,
+  dataSummary,
 }: {
   opportunities: PickOpportunity[];
   filters: {
@@ -61,6 +72,7 @@ export function PickFinderBoard({
     sort: "edge" | "confidence" | "l10" | "diff" | "streak" | "newest";
     minHitRate?: number;
   };
+  dataSummary: DfsDataSummary;
 }) {
   const top = opportunities[0];
   const builderPicks = opportunities.slice(0, 3);
@@ -290,7 +302,11 @@ export function PickFinderBoard({
         </div>
         {!opportunities.length ? (
           <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-5 text-sm text-slate-400">
-            No picks match these filters. Reset filters or lower the hit-rate threshold.
+            No picks match these filters. Current demo coverage is {dataSummary.playerCount} players
+            across {dataSummary.sports.join(", ")} and markets{" "}
+            {dataSummary.markets.map((market) => market.replace("player_", "").replaceAll("_", " ")).join(", ")}.
+            Connected odds/news APIs do not add Finder players; connect {dataSummary.expectedProviderKey}
+            or reset filters.
           </div>
         ) : null}
       </Card>
