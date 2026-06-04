@@ -37,11 +37,13 @@ Copy `.env.example` to `.env.local` and fill in production values:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+ODDSAPI=
 THE_ODDS_API_KEY=
 THE_ODDS_API_REGIONS=us
 THE_ODDS_API_BOOKMAKERS=
 THE_ODDS_API_MARKETS=h2h,spreads,totals
 THE_ODDS_API_PLAYER_PROP_MARKETS=player_points,player_rebounds,player_assists,player_threes,player_shots_on_goal,batter_hits,batter_total_bases,pitcher_strikeouts
+THE_ODDS_API_PLAYER_PROP_EVENT_LIMIT=2
 THE_ODDS_API_ODDS_FORMAT=american
 THE_ODDS_API_DATE_FORMAT=iso
 THE_ODDS_API_EVENT_IDS=
@@ -68,14 +70,14 @@ NEWSAPI_TOP_HEADLINES_CATEGORY=sports
 AI_PROVIDER_API_KEY=
 ```
 
-The app uses mock provider data for local development until live provider adapters are configured.
-`ODDS_API_KEY` and `NEWS_API_KEY` are still accepted as backwards-compatible fallbacks, but new deployments should use `THE_ODDS_API_KEY` and `NEWSAPI_API_KEY`.
+The app uses mock provider data only when live provider adapters are not configured.
+`ODDSAPI`, `ODDSAPI_KEY`, `ODDS_API_KEY`, and `THE_ODDS_API_KEY` are accepted for The Odds API. New deployments can use `ODDSAPI` if that is how your key is labeled.
 
 ## Provider Integrations
 
 - The Odds API uses `/v4/sports/{sport}/odds` with `regions`, `markets`, `oddsFormat`, and `dateFormat`.
 - The Odds API also supports `bookmakers`, `eventIds`, `commenceTimeFrom`, `commenceTimeTo`, `includeLinks`, `includeSids`, `includeBetLimits`, and `includeRotationNumbers`.
-- The Odds API player props are not returned by the normal sport odds endpoint. They must be requested one event at a time from `/v4/sports/{sport}/events/{eventId}/odds` with player-prop market keys.
+- Finder requests fresh The Odds API player props one event at a time from `/v4/sports/{sport}/events/{eventId}/odds` when an odds key is configured. Use `THE_ODDS_API_PLAYER_PROP_EVENT_LIMIT` to control quota usage.
 - NewsAPI uses `/v2/everything` with provider-safe server-side `X-Api-Key` authentication.
 - NewsAPI also supports `top-headlines`, `searchIn`, `sources`, `domains`, `excludeDomains`, `from`, `to`, `language`, `sortBy`, `pageSize`, and `page`.
 - `GET /api/providers/status` reports whether provider keys are configured without exposing secrets.

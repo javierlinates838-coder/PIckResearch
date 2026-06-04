@@ -14,8 +14,14 @@ export type MarketType =
   | "player_points"
   | "player_rebounds"
   | "player_assists"
+  | "player_threes"
+  | "player_goals"
   | "player_shots"
+  | "player_shots_on_goal"
   | "player_strikeouts"
+  | "batter_hits"
+  | "batter_total_bases"
+  | "pitcher_strikeouts"
   | "player_kills";
 
 export type NewsType =
@@ -213,7 +219,8 @@ export type PickApp =
   | "Sleeper"
   | "DraftKings"
   | "FanDuel"
-  | "BetMGM";
+  | "BetMGM"
+  | "OddsAPI";
 
 export interface PickOpportunity {
   id: string;
@@ -223,6 +230,8 @@ export interface PickOpportunity {
   opponent: Team;
   market: MarketType;
   app: PickApp;
+  sportsbook?: string;
+  odds?: number;
   line: number;
   side: "over" | "under";
   projection: number;

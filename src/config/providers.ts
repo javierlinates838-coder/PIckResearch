@@ -31,6 +31,8 @@ export const defaultNewsApiQueries: Record<SportKey, string> = {
 const newsApiPrivateKeyAliases = ["NEWSAPI_API_KEY", "NEWS_API_KEY", "NEWSAPI_KEY"] as const;
 const newsApiPublicKeyAliases = ["NEXT_PUBLIC_NEWSAPI_API_KEY", "NEXT_PUBLIC_NEWS_API_KEY"] as const;
 const theOddsApiPrivateKeyAliases = [
+  "ODDSAPI",
+  "ODDSAPI_KEY",
   "THE_ODDS_API_KEY",
   "ODDS_API_KEY",
   "THEODDSAPI_API_KEY",
@@ -94,12 +96,12 @@ export function getProviderStatus() {
     },
     theOddsApi: {
       configured: Boolean(getTheOddsApiKey()),
-      expectedKey: "THE_ODDS_API_KEY",
+      expectedKey: "ODDSAPI",
       acceptedAliases: [...theOddsApiPrivateKeyAliases],
       detectedAlias: theOddsApiDetectedAlias ?? null,
       publicKeyDetected: Boolean(findConfiguredEnvName(theOddsApiPublicKeyAliases)),
-      powers: ["dashboard.games", "dashboard.odds"],
-      doesNotPower: ["finder.players", "finder.props", "player.statLogs"],
+      powers: ["dashboard.games", "dashboard.odds", "finder.livePropLines"],
+      doesNotPower: ["player.statLogs", "hitRates", "dfsProjections"],
       baseUrl: process.env.THE_ODDS_API_BASE_URL ?? "https://api.the-odds-api.com/v4",
       regions: process.env.THE_ODDS_API_REGIONS ?? "us",
       bookmakers: process.env.THE_ODDS_API_BOOKMAKERS,
@@ -107,6 +109,7 @@ export function getProviderStatus() {
       playerPropMarkets:
         process.env.THE_ODDS_API_PLAYER_PROP_MARKETS ??
         "player_points,player_rebounds,player_assists,player_threes,player_shots_on_goal,batter_hits,batter_total_bases,pitcher_strikeouts",
+      playerPropEventLimit: Number(process.env.THE_ODDS_API_PLAYER_PROP_EVENT_LIMIT ?? 2),
       oddsFormat: process.env.THE_ODDS_API_ODDS_FORMAT ?? "american",
       dateFormat: process.env.THE_ODDS_API_DATE_FORMAT ?? "iso",
       eventIds: process.env.THE_ODDS_API_EVENT_IDS,
@@ -117,7 +120,7 @@ export function getProviderStatus() {
       includeBetLimits: process.env.THE_ODDS_API_INCLUDE_BET_LIMITS ?? "false",
       includeRotationNumbers: process.env.THE_ODDS_API_INCLUDE_ROTATION_NUMBERS ?? "false",
       playerPropsNote:
-        "The Odds API player props must be requested one event at a time with /sports/{sport}/events/{eventId}/odds.",
+        "The Odds API player props are requested fresh one event at a time with /sports/{sport}/events/{eventId}/odds. Each event/market/region costs quota.",
     },
     dfsProps: {
       configured: Boolean(getDfsPropsApiKey()),

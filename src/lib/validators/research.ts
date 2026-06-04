@@ -44,7 +44,7 @@ export const finderQuerySchema = z.object({
     ])
     .optional(),
   app: z
-    .enum(["PrizePicks", "Underdog", "Sleeper", "DraftKings", "FanDuel", "BetMGM"])
+    .enum(["PrizePicks", "Underdog", "Sleeper", "DraftKings", "FanDuel", "BetMGM", "OddsAPI"])
     .optional(),
   sort: z
     .enum(["edge", "confidence", "l10", "diff", "streak", "newest"])

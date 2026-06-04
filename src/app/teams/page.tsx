@@ -34,7 +34,7 @@ export default async function TeamsPage({
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-lime-200">
             Team research
           </p>
           <h1 className="mt-3 text-3xl font-black text-white sm:text-5xl">
@@ -63,9 +63,9 @@ export default async function TeamsPage({
           ))}
         </div>
       </div>
-      <Card className="mb-6 border-fuchsia-300/20 bg-fuchsia-500/10">
+      <Card className="mb-6 border-orange-300/20 bg-orange-500/10">
         <Badge variant="warning">Demo metrics</Badge>
-        <p className="mt-3 text-sm leading-6 text-fuchsia-50/80">
+        <p className="mt-3 text-sm leading-6 text-orange-50/80">
           Team ratings, pace, form, net-rating trends, and injury impact are demo research
           data right now. Connect a stats provider or scheduled Supabase ingestion before
           treating these as verified live team metrics.

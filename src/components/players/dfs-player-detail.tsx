@@ -28,7 +28,7 @@ function ordinal(value: number) {
 }
 
 function rankClass(rank: number) {
-  return rank >= 20 ? "text-cyan-200" : rank <= 10 ? "text-rose-300" : "text-fuchsia-100";
+  return rank >= 20 ? "text-lime-200" : rank <= 10 ? "text-red-300" : "text-orange-100";
 }
 
 function defenseRows(baseRank: number) {
@@ -66,13 +66,13 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
     <div className="space-y-6">
       <Link
         href="/finder"
-        className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-cyan-100"
+        className="inline-flex items-center gap-2 text-sm font-semibold text-lime-200 hover:text-lime-100"
       >
         <ArrowLeft className="size-4" />
         Back to Pick Finder
       </Link>
 
-      <Card className="overflow-hidden border-fuchsia-300/20 bg-gradient-to-br from-fuchsia-500/15 via-violet-500/10 to-cyan-400/10">
+      <Card className="overflow-hidden border-orange-300/20 bg-gradient-to-br from-lime-500/10 via-orange-500/10 to-red-500/10">
         <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
           <div>
             <div className="flex flex-wrap gap-2">
@@ -86,14 +86,14 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
             <p className="mt-2 text-slate-300">
               {research.player.position} - {research.team.abbreviation} - {marketLabel(research.primaryMarket)}
             </p>
-            <p className="mt-4 max-w-3xl text-sm leading-6 text-violet-50/75">
+            <p className="mt-4 max-w-3xl text-sm leading-6 text-orange-50/75">
               {research.matchup.note}
             </p>
           </div>
-          <div className="rounded-3xl border border-cyan-200/20 bg-black/25 p-5 shadow-xl shadow-cyan-950/20">
-            <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/60">Current line</p>
+          <div className="rounded-3xl border border-lime-200/20 bg-black/25 p-5 shadow-xl shadow-lime-950/20">
+            <p className="text-xs uppercase tracking-[0.2em] text-lime-100/60">Current line</p>
             <p className="mt-2 text-4xl font-black text-white">{research.currentLine}</p>
-            <p className="mt-1 text-sm text-cyan-100">Projection {research.projection}</p>
+            <p className="mt-1 text-sm text-lime-100">Projection {research.projection}</p>
           </div>
         </div>
       </Card>
@@ -120,7 +120,7 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
             title="Defense vs Position"
             description={`${research.matchup.opponent} allowed averages and ranks for this player's role.`}
           />
-          <div className="grid grid-cols-[1fr_4rem_4rem_4rem] gap-2 px-2 text-xs uppercase tracking-[0.16em] text-violet-200/50">
+          <div className="grid grid-cols-[1fr_4rem_4rem_4rem] gap-2 px-2 text-xs uppercase tracking-[0.16em] text-orange-100/50">
             <span>Stat</span>
             <span>2026</span>
             <span>Last 15</span>
@@ -142,7 +142,7 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
                 </div>
                 <div className="mt-3 h-1.5 rounded-full bg-slate-800">
                   <div
-                    className={`h-full rounded-full ${row.season >= 18 ? "bg-cyan-300" : "bg-rose-400"}`}
+                    className={`h-full rounded-full ${row.season >= 18 ? "bg-lime-400" : "bg-red-500"}`}
                     style={{ width: `${Math.max(12, (row.season / 30) * 100)}%` }}
                   />
                 </div>
@@ -151,11 +151,11 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
           </div>
           <div className="mt-4 flex flex-wrap gap-4 text-xs text-slate-400">
             <span className="inline-flex items-center gap-2">
-              <span className="size-3 rounded border border-cyan-300 bg-cyan-300/20" />
+              <span className="size-3 rounded border border-lime-300 bg-lime-300/20" />
               Better for overs
             </span>
             <span className="inline-flex items-center gap-2">
-              <span className="size-3 rounded border border-rose-400 bg-rose-400/20" />
+              <span className="size-3 rounded border border-red-400 bg-red-400/20" />
               Better for unders
             </span>
           </div>
@@ -175,8 +175,8 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
                 </span>
                 <div>
                   <div className="relative h-3 overflow-hidden rounded-full bg-slate-800">
-                    <div className="absolute left-0 top-0 h-full bg-gradient-to-r from-rose-500 to-fuchsia-400" style={{ width: "50%" }} />
-                    <div className="absolute right-0 top-0 h-full bg-gradient-to-l from-cyan-300 to-violet-400" style={{ width: "50%" }} />
+                    <div className="absolute left-0 top-0 h-full bg-gradient-to-r from-red-500 to-orange-400" style={{ width: "50%" }} />
+                    <div className="absolute right-0 top-0 h-full bg-gradient-to-l from-lime-300 to-green-500" style={{ width: "50%" }} />
                     <div
                       className="absolute top-[-2px] h-5 w-1 rounded-full bg-white"
                       style={{ left: `${Math.min(94, Math.max(4, (row.defense / 30) * 100))}%` }}
@@ -191,8 +191,8 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
             ))}
           </div>
           <div className="mt-5 flex justify-between text-xs font-semibold">
-            <span className="text-rose-300">Offensive advantage</span>
-            <span className="text-cyan-200">Defensive advantage</span>
+            <span className="text-red-300">Offensive advantage</span>
+            <span className="text-lime-200">Defensive advantage</span>
           </div>
         </Card>
       </section>
@@ -210,7 +210,7 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
                 <span className="text-slate-500">{formatDate(log.playedAt)}</span>
                 <div className="relative h-9 overflow-hidden rounded-full bg-slate-900">
                   <div
-                    className={`h-full rounded-full ${log.hit ? "bg-gradient-to-r from-cyan-300 to-fuchsia-300" : "bg-slate-600"}`}
+                    className={`h-full rounded-full ${log.hit ? "bg-gradient-to-r from-lime-300 to-orange-300" : "bg-slate-600"}`}
                     style={{ width: `${Math.max(8, (log.value / maxValue) * 100)}%` }}
                   />
                   <div
@@ -279,8 +279,8 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
                   <td className="py-3 text-slate-300">{log.line}</td>
                   <td className="py-3">
                     {log.hit ? (
-                      <span className="inline-flex items-center gap-2 text-cyan-200">
-                        <CheckCircle2 className="size-4 text-cyan-200" />
+                      <span className="inline-flex items-center gap-2 text-lime-200">
+                        <CheckCircle2 className="size-4 text-lime-200" />
                         Hit
                       </span>
                     ) : (
@@ -297,10 +297,10 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
         </div>
       </Card>
 
-      <Card className="border-fuchsia-300/20 bg-fuchsia-500/10">
+      <Card className="border-orange-300/20 bg-orange-500/10">
         <div className="flex gap-3">
-          <Activity className="mt-1 size-5 text-fuchsia-200" />
-          <p className="text-sm leading-6 text-fuchsia-50/80">
+          <Activity className="mt-1 size-5 text-orange-200" />
+          <p className="text-sm leading-6 text-orange-50/80">
             This is a complete DFS prop research interface, but the rows are still demo data until a
             production DFS projections/stat-log provider is connected. The UI no longer pretends
             fake games are live or makes teams the center of the product.
