@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { PickFinderBoard } from "@/components/finder/pick-finder-board";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { supportedSports } from "@/config/sports";
 import { listPickOpportunities } from "@/lib/repositories/research";
 import { finderQuerySchema } from "@/lib/validators/research";
@@ -77,6 +78,57 @@ export default async function FinderPage({
         </div>
       </div>
 
+      <Card className="mb-6 border-cyan-300/20 bg-cyan-400/10">
+        <form action="/finder" className="grid gap-3 lg:grid-cols-[1fr_auto_auto_auto_auto]">
+          <label className="sr-only" htmlFor="finder-search">
+            Search players or props
+          </label>
+          <input
+            id="finder-search"
+            name="q"
+            type="search"
+            defaultValue={filters.q}
+            placeholder="Search player, prop, app, or team..."
+            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/70"
+          />
+          <select
+            name="sport"
+            defaultValue={filters.sport ?? ""}
+            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none focus:border-cyan-300/70"
+          >
+            <option value="">All sports</option>
+            {supportedSports.map((sport) => (
+              <option key={sport.key} value={sport.key}>
+                {sport.label}
+              </option>
+            ))}
+          </select>
+          <select
+            name="sort"
+            defaultValue={filters.sort}
+            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none focus:border-cyan-300/70"
+          >
+            <option value="edge">Best edge</option>
+            <option value="confidence">Confidence</option>
+            <option value="l10">L10 hit rate</option>
+            <option value="diff">Line diff</option>
+            <option value="streak">Streak</option>
+            <option value="newest">Newest</option>
+          </select>
+          {filters.market ? <input type="hidden" name="market" value={filters.market} /> : null}
+          {filters.app ? <input type="hidden" name="app" value={filters.app} /> : null}
+          {filters.minHitRate ? (
+            <input type="hidden" name="minHitRate" value={String(filters.minHitRate)} />
+          ) : null}
+          <button
+            type="submit"
+            className="min-h-12 rounded-2xl bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300 px-5 text-sm font-black text-slate-950 shadow-lg shadow-fuchsia-500/20"
+          >
+            Search props
+          </button>
+        </form>
+      </Card>
+
       <div className="mb-6 flex flex-wrap gap-2">
         <Badge variant="info">L5/L10/L15</Badge>
         <Badge variant="info">H2H</Badge>
@@ -92,6 +144,7 @@ export default async function FinderPage({
           sport: filters.sport,
           market: filters.market,
           app: filters.app,
+          query: filters.q,
           sort: filters.sort,
           minHitRate: filters.minHitRate,
         }}
