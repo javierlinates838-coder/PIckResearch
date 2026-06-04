@@ -32,8 +32,17 @@ interface NewsApiResponse {
 interface FetchNewsOptions {
   sport?: SportKey;
   query?: string;
+  endpoint?: "everything" | "top-headlines";
   language?: string;
   sortBy?: "relevancy" | "popularity" | "publishedAt";
+  searchIn?: string;
+  sources?: string;
+  domains?: string;
+  excludeDomains?: string;
+  from?: string;
+  to?: string;
+  country?: string;
+  category?: string;
   pageSize?: number;
   page?: number;
 }
@@ -117,17 +126,40 @@ function classifySport(article: NewsApiArticle, fallback?: SportKey): SportKey {
 
 export function buildNewsApiEverythingUrl(options?: FetchNewsOptions) {
   const status = getProviderStatus().newsapi;
-  const url = new URL(`${status.baseUrl}/everything`);
+  const endpoint = options?.endpoint ?? (status.endpoint === "top-headlines" ? "top-headlines" : "everything");
+  const url = new URL(`${status.baseUrl}/${endpoint}`);
   const query =
     options?.query ??
     (options?.sport ? defaultNewsApiQueries[options.sport] : process.env.NEWSAPI_QUERY) ??
     defaultAllSportsQuery;
 
   url.searchParams.set("q", query.slice(0, 500));
-  url.searchParams.set("language", options?.language ?? status.language);
-  url.searchParams.set("sortBy", options?.sortBy ?? "publishedAt");
+  const selectedSources = options?.sources ?? status.sources;
+
+  if (endpoint === "everything") {
+    url.searchParams.set("language", options?.language ?? status.language);
+    url.searchParams.set("sortBy", options?.sortBy ?? "publishedAt");
+  } else if (!selectedSources) {
+    url.searchParams.set("country", options?.country ?? status.topHeadlinesCountry);
+    url.searchParams.set("category", options?.category ?? status.topHeadlinesCategory);
+  }
   url.searchParams.set("pageSize", String(Math.min(options?.pageSize ?? status.pageSize, 100)));
   url.searchParams.set("page", String(options?.page ?? 1));
+  const optionalParams = {
+    searchIn: endpoint === "everything" ? options?.searchIn ?? status.searchIn : undefined,
+    sources: selectedSources,
+    domains: endpoint === "everything" ? options?.domains ?? status.domains : undefined,
+    excludeDomains:
+      endpoint === "everything" ? options?.excludeDomains ?? status.excludeDomains : undefined,
+    from: endpoint === "everything" ? options?.from ?? status.from : undefined,
+    to: endpoint === "everything" ? options?.to ?? status.to : undefined,
+  };
+
+  Object.entries(optionalParams).forEach(([key, value]) => {
+    if (value) {
+      url.searchParams.set(key, value);
+    }
+  });
 
   return url;
 }
