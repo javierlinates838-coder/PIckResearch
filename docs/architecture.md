@@ -25,6 +25,7 @@ PickResearch is a modular sports research platform for discovering betting edges
 
 ### 4. News Engine
 - Provider adapters for sports news, injury reports, lineup feeds, and beat-writer sources.
+- NewsAPI integration uses `/v2/everything`, `q`, `language`, `sortBy`, and server-side `X-Api-Key` authentication.
 - Normalized news events tagged by sport, team, player, severity, and type.
 - API surface designed for scheduled ingestion via Vercel Cron or Supabase Edge Functions.
 
@@ -56,8 +57,8 @@ Supabase Postgres
   |-- User-owned research data protected by RLS
   |
   +-- Scheduled ingestion jobs
-      |-- Odds provider adapters
-      |-- News/injury provider adapters
+      |-- The Odds API provider adapter
+      |-- NewsAPI news/injury provider adapter
       |-- Stats provider adapters
       +-- AI provider adapter
 ```
@@ -119,6 +120,9 @@ All route handlers validate query/body input with Zod and call server-only servi
 /api/news
   GET: normalized news feed filtered by sport/team/player/type/severity
 
+/api/providers/status
+  GET: redacted provider readiness for NewsAPI and The Odds API
+
 /api/ai/analyze
   POST: server-only AI research explanation endpoint
 
@@ -169,6 +173,8 @@ docs/
 - Route handlers use Zod validation and centralized API response helpers.
 - User-owned data relies on Supabase Auth and RLS policies.
 - External provider requests are isolated behind adapter interfaces in `src/lib/providers`.
+- The Odds API keys are read as `THE_ODDS_API_KEY` with `ODDS_API_KEY` fallback.
+- NewsAPI keys are read as `NEWSAPI_API_KEY` with `NEWS_API_KEY` fallback.
 - AI provider calls are performed only on the server.
 
 ## Deployment Plan
@@ -179,8 +185,16 @@ docs/
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
-   - `ODDS_API_KEY`
-   - `NEWS_API_KEY`
+   - `THE_ODDS_API_KEY`
+   - `THE_ODDS_API_REGIONS`
+   - `THE_ODDS_API_MARKETS`
+   - `THE_ODDS_API_ODDS_FORMAT`
+   - `THE_ODDS_API_DATE_FORMAT`
+   - `NEWSAPI_API_KEY`
+   - `NEWSAPI_LANGUAGE`
+   - `NEWSAPI_SORT_BY`
+   - `NEWSAPI_PAGE_SIZE`
+   - `NEWSAPI_QUERY`
    - `AI_PROVIDER_API_KEY`
 3. Configure build command: `npm run build`.
 4. Configure output from the default Next.js build.
@@ -194,8 +208,10 @@ docs/
 
 ### Data Ingestion
 - Start with mock provider adapters for local development.
-- Add production adapters per provider without changing UI or API contracts.
+- Use `src/lib/providers/the-odds-api.ts` for live odds and game snapshots from The Odds API v4.
+- Use `src/lib/providers/newsapi.ts` for NewsAPI article ingestion and normalized injury/news classification.
 - Persist raw provider references in `source` and `external_*` columns for traceability.
+- Track scheduled ingestion results in `provider_ingestion_runs`.
 
 ## Initial Implementation Milestones
 

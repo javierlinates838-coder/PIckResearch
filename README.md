@@ -37,12 +37,28 @@ Copy `.env.example` to `.env.local` and fill in production values:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-ODDS_API_KEY=
-NEWS_API_KEY=
+THE_ODDS_API_KEY=
+THE_ODDS_API_REGIONS=us
+THE_ODDS_API_MARKETS=h2h,spreads,totals
+THE_ODDS_API_ODDS_FORMAT=american
+THE_ODDS_API_DATE_FORMAT=iso
+NEWSAPI_API_KEY=
+NEWSAPI_LANGUAGE=en
+NEWSAPI_SORT_BY=publishedAt
+NEWSAPI_PAGE_SIZE=25
+NEWSAPI_QUERY=
 AI_PROVIDER_API_KEY=
 ```
 
 The app uses mock provider data for local development until live provider adapters are configured.
+`ODDS_API_KEY` and `NEWS_API_KEY` are still accepted as backwards-compatible fallbacks, but new deployments should use `THE_ODDS_API_KEY` and `NEWSAPI_API_KEY`.
+
+## Provider Integrations
+
+- The Odds API uses `/v4/sports/{sport}/odds` with `regions`, `markets`, `oddsFormat`, and `dateFormat`.
+- NewsAPI uses `/v2/everything` with provider-safe server-side `X-Api-Key` authentication.
+- `GET /api/providers/status` reports whether provider keys are configured without exposing secrets.
+- Dashboard and news data prefer live provider data when keys are configured and fall back to mock data if keys are missing or providers are unavailable.
 
 ## Database
 

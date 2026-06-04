@@ -72,6 +72,17 @@ create table public.sportsbooks (
   created_at timestamptz not null default now()
 );
 
+create table public.provider_ingestion_runs (
+  id uuid primary key default gen_random_uuid(),
+  provider text not null check (provider in ('newsapi', 'theoddsapi', 'stats', 'ai')),
+  status text not null check (status in ('started', 'succeeded', 'failed')),
+  started_at timestamptz not null default now(),
+  completed_at timestamptz,
+  records_processed integer not null default 0,
+  error_message text,
+  metadata jsonb not null default '{}'::jsonb
+);
+
 create table public.games (
   id uuid primary key default gen_random_uuid(),
   sport sport_key not null references public.sports (key),
@@ -277,6 +288,7 @@ create index player_stat_logs_player_played_idx on public.player_stat_logs (play
 create index news_items_sport_published_idx on public.news_items (sport, published_at desc);
 create index saved_picks_user_created_idx on public.saved_picks (user_id, created_at desc);
 create index research_notes_user_entity_idx on public.research_notes (user_id, entity_type, entity_id);
+create index provider_ingestion_runs_provider_started_idx on public.provider_ingestion_runs (provider, started_at desc);
 
 alter table public.profiles enable row level security;
 alter table public.saved_picks enable row level security;
@@ -284,6 +296,7 @@ alter table public.research_notes enable row level security;
 alter table public.favorite_players enable row level security;
 alter table public.favorite_teams enable row level security;
 alter table public.ai_analysis enable row level security;
+alter table public.provider_ingestion_runs enable row level security;
 
 create policy "profiles are readable by owner"
   on public.profiles for select
