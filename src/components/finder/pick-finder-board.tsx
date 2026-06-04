@@ -57,6 +57,7 @@ export function PickFinderBoard({
     sport?: SportKey;
     market?: MarketType;
     app?: PickApp;
+    query?: string;
     sort: "edge" | "confidence" | "l10" | "diff" | "streak" | "newest";
     minHitRate?: number;
   };
@@ -118,6 +119,7 @@ export function PickFinderBoard({
                   key={value}
                   href={finderHref({
                     sport: filters.sport,
+                    q: filters.query,
                     market: filters.market,
                     app: filters.app,
                     sort: value,
@@ -136,6 +138,7 @@ export function PickFinderBoard({
                   key={item.value}
                   href={finderHref({
                     sport: filters.sport,
+                    q: filters.query,
                     market: item.value,
                     app: filters.app,
                     sort: filters.sort,
@@ -153,6 +156,7 @@ export function PickFinderBoard({
                   key={app}
                   href={finderHref({
                     sport: filters.sport,
+                    q: filters.query,
                     market: filters.market,
                     app,
                     sort: filters.sort,
@@ -185,12 +189,12 @@ export function PickFinderBoard({
               <div key={pick.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <a
+                    <Link
                       href={`/players/${pick.player.id}`}
                       className="font-semibold text-white hover:text-cyan-200"
                     >
                       {pick.player.name}
-                    </a>
+                    </Link>
                     <p className="text-sm text-slate-400">
                       {pick.side.toUpperCase()} {pick.line} {marketLabel(pick.market)}
                     </p>
@@ -237,12 +241,12 @@ export function PickFinderBoard({
                         <Flame className="size-4" />
                       </div>
                       <div>
-                        <a
+                        <Link
                           href={`/players/${pick.player.id}`}
                           className="font-semibold text-white hover:text-cyan-200"
                         >
                           {pick.player.name}
-                        </a>
+                        </Link>
                         <p className="text-xs text-slate-500">
                           {pick.team.abbreviation} vs {pick.opponent.abbreviation} - {pick.sport.toUpperCase()}
                         </p>
@@ -271,13 +275,13 @@ export function PickFinderBoard({
                     <Badge variant={confidenceVariant(pick.edgeScore)}>{pick.edgeScore}</Badge>
                   </td>
                   <td className="rounded-r-2xl px-3 py-4">
-                    <a
+                    <Link
                       href={`/players/${pick.player.id}`}
                       className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-100 hover:border-cyan-200"
                     >
                       <Plus className="size-3" />
                       Research
-                    </a>
+                    </Link>
                   </td>
                 </tr>
               ))}

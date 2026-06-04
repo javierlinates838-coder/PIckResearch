@@ -74,9 +74,42 @@ export default async function PlayersPage({
           DFS props until a real projections/stat-log provider is connected.
         </p>
       </Card>
+      <Card className="mb-6 border-cyan-300/20 bg-cyan-400/10">
+        <form action="/players" className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
+          <label className="sr-only" htmlFor="player-search">
+            Search players
+          </label>
+          <input
+            id="player-search"
+            name="q"
+            type="search"
+            defaultValue={filters.q}
+            placeholder="Search player name..."
+            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/70"
+          />
+          <select
+            name="sport"
+            defaultValue={filters.sport ?? ""}
+            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none focus:border-cyan-300/70"
+          >
+            <option value="">All sports</option>
+            {supportedSports.map((sport) => (
+              <option key={sport.key} value={sport.key}>
+                {sport.label}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            className="min-h-12 rounded-2xl bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300 px-5 text-sm font-black text-slate-950 shadow-lg shadow-fuchsia-500/20"
+          >
+            Search
+          </button>
+        </form>
+      </Card>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {uniquePlayers.map((item) => (
-          <a
+          <Link
             key={item.player.id}
             href={`/players/${item.player.id}`}
             className="rounded-3xl border border-fuchsia-200/10 bg-[#090b1f]/75 p-5 shadow-2xl shadow-fuchsia-950/20 transition hover:border-cyan-300/50 hover:bg-white/[0.06]"
@@ -110,7 +143,7 @@ export default async function PlayersPage({
                 <p className="font-semibold text-white">{item.streak}</p>
               </div>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </div>
