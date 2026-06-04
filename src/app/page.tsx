@@ -23,10 +23,10 @@ export default function HomePage() {
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/dashboard"
+              href="/finder"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-emerald-300"
             >
-              Open research dashboard
+              Open Pick Finder
               <ArrowRight className="size-4" />
             </Link>
             <Link

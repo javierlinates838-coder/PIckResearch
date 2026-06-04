@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  Goal,
   Newspaper,
   Shield,
   Star,
@@ -8,6 +9,11 @@ import {
 } from "lucide-react";
 
 export const mainNavigation = [
+  {
+    href: "/finder",
+    label: "Finder",
+    icon: Goal,
+  },
   {
     href: "/dashboard",
     label: "Dashboard",

@@ -18,6 +18,12 @@ PickResearch is a modular sports research platform for discovering betting edges
 - Consistency score and prop hit-rate calculations.
 - Favoriting and notes for repeat research.
 
+### 2a. Pick Finder
+- Projection-board workflow inspired by prop research tools.
+- Filter by sport, stat type, app/book, L10 hit rate, line difference, H2H, streak, and matchup.
+- Pick-builder queue for saving/exporting selections once authenticated workflows are connected.
+- Clearly labels demo projections until live DFS/sportsbook prop lines and stat logs are ingested.
+
 ### 3. Team Research
 - Offensive rating, defensive rating, pace, and trend metrics.
 - Recent form and game-level matchup context.
@@ -104,6 +110,9 @@ All route handlers validate query/body input with Zod and call server-only servi
 ```text
 /api/dashboard
   GET: dashboard summary with games, odds, splits, news, and sharp indicators
+
+/api/finder
+  GET: ranked prop opportunity board with filters for sport, market, app, hit rate, and sort
 
 /api/players
   GET: searchable player list

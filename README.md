@@ -13,6 +13,7 @@ Production-ready sports research platform for finding betting edges and player p
 ## Features
 
 - Research dashboard with provider-backed odds/news, data-quality labels, provider warnings, and demo fallbacks
+- Pick Finder projections board with app filters, stat filters, line difference, L5/L10/L15 hit rates, H2H, streaks, and pick-builder queue
 - Player research with last 5/10/season averages, splits, trends, consistency, hit rates, and matchup notes
 - Team research with ratings, pace, recent form, trends, and injury impact
 - News engine for injuries, suspensions, lineups, coaching, transactions, and general alerts
@@ -64,6 +65,7 @@ The app uses mock provider data for local development until live provider adapte
 
 | Module | Current source | Notes |
 | --- | --- | --- |
+| Pick Finder projections | Demo metrics | PickFinder-style workflow; replace with imported DFS/sportsbook props for production. |
 | Games | The Odds API or demo fallback | Live when `THE_ODDS_API_KEY` is configured. |
 | Odds | The Odds API or demo fallback | Live latest prices. Historical movement needs persisted snapshots. |
 | News | NewsAPI or demo fallback | Live when `NEWSAPI_API_KEY` is configured. |

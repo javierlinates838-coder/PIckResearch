@@ -206,3 +206,39 @@ export interface NewsResearchData {
     warnings: string[];
   };
 }
+
+export type PickApp =
+  | "PrizePicks"
+  | "Underdog"
+  | "Sleeper"
+  | "DraftKings"
+  | "FanDuel"
+  | "BetMGM";
+
+export interface PickOpportunity {
+  id: string;
+  sport: SportKey;
+  player: Player;
+  team: Team;
+  opponent: Team;
+  market: MarketType;
+  app: PickApp;
+  line: number;
+  side: "over" | "under";
+  projection: number;
+  diff: number;
+  l5HitRate: number;
+  l10HitRate: number;
+  l15HitRate: number;
+  seasonHitRate: number;
+  h2hHitRate: number;
+  streak: number;
+  opponentRank: number;
+  consistencyScore: number;
+  confidence: number;
+  edgeScore: number;
+  status: "live" | "demo";
+  injuryContext: "clean" | "monitor" | "risk";
+  tags: string[];
+  rationale: string;
+}

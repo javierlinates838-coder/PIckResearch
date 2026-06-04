@@ -27,6 +27,32 @@ export const newsQuerySchema = z.object({
     .optional(),
 });
 
+export const finderQuerySchema = z.object({
+  sport: sportKeySchema.optional(),
+  q: z.string().trim().min(1).max(80).optional(),
+  market: z
+    .enum([
+      "moneyline",
+      "spread",
+      "total",
+      "player_points",
+      "player_rebounds",
+      "player_assists",
+      "player_shots",
+      "player_strikeouts",
+      "player_kills",
+    ])
+    .optional(),
+  app: z
+    .enum(["PrizePicks", "Underdog", "Sleeper", "DraftKings", "FanDuel", "BetMGM"])
+    .optional(),
+  sort: z
+    .enum(["edge", "confidence", "l10", "diff", "streak", "newest"])
+    .optional()
+    .default("edge"),
+  minHitRate: z.coerce.number().min(0).max(100).optional(),
+});
+
 export const aiAnalysisSchema = z.object({
   gameId: z.string().min(1).optional(),
   playerId: z.string().min(1).optional(),
