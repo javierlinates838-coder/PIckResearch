@@ -144,9 +144,7 @@ export async function fetchNewsApiArticles(options?: FetchNewsOptions) {
       Accept: "application/json",
       "X-Api-Key": apiKey,
     },
-    next: {
-      revalidate: 300,
-    },
+    cache: "no-store",
   });
 
   const payload = (await response.json()) as NewsApiResponse;
@@ -171,6 +169,7 @@ export function normalizeNewsApiArticles(articles: NewsApiArticle[], sport?: Spo
       summary: article.description ?? article.content ?? "No article summary provided by NewsAPI.",
       source: article.source.name,
       publishedAt: article.publishedAt,
+      url: article.url,
     };
   });
 }

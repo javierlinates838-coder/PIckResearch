@@ -32,6 +32,13 @@ export type SharpSide = "home" | "away" | "over" | "under" | "none";
 
 export type PickResult = "pending" | "win" | "loss" | "push" | "void";
 
+export type ResearchDataSource =
+  | "theoddsapi"
+  | "newsapi"
+  | "mock"
+  | "supabase"
+  | "unavailable";
+
 export interface Sport {
   key: SportKey;
   label: string;
@@ -102,6 +109,7 @@ export interface NewsItem {
   summary: string;
   source: string;
   publishedAt: string;
+  url?: string;
   playerId?: string;
   teamId?: string;
   gameId?: string;
@@ -147,6 +155,37 @@ export interface AiAnalysis {
   valuation: string;
 }
 
+export interface DashboardDataMeta {
+  fetchedAt: string;
+  sources: {
+    games: ResearchDataSource;
+    odds: ResearchDataSource;
+    splits: ResearchDataSource;
+    news: ResearchDataSource;
+    playerEdges: ResearchDataSource;
+    teamTrends: ResearchDataSource;
+  };
+  providerStatus: {
+    newsapi: {
+      configured: boolean;
+      detectedAlias: string | null;
+      publicKeyDetected: boolean;
+    };
+    theOddsApi: {
+      configured: boolean;
+      detectedAlias: string | null;
+      publicKeyDetected: boolean;
+      requestsRemaining?: string | null;
+      requestsUsed?: string | null;
+    };
+  };
+  providerErrors: {
+    newsapi?: string;
+    theOddsApi?: string;
+  };
+  warnings: string[];
+}
+
 export interface DashboardData {
   games: Game[];
   odds: OddsSnapshot[];
@@ -154,4 +193,16 @@ export interface DashboardData {
   news: NewsItem[];
   playerEdges: PlayerResearchMetrics[];
   teamTrends: TeamResearchMetrics[];
+  meta: DashboardDataMeta;
+}
+
+export interface NewsResearchData {
+  items: NewsItem[];
+  meta: {
+    fetchedAt: string;
+    source: ResearchDataSource;
+    providerStatus: DashboardDataMeta["providerStatus"]["newsapi"];
+    providerError?: string;
+    warnings: string[];
+  };
 }

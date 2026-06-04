@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import { PlayerResearchGrid } from "@/components/research/player-research-grid";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { supportedSports } from "@/config/sports";
 import { getDashboardResearch, listPlayers } from "@/lib/repositories/research";
 import { listQuerySchema } from "@/lib/validators/research";
@@ -8,6 +10,9 @@ import { listQuerySchema } from "@/lib/validators/research";
 export const metadata: Metadata = {
   title: "Player Research",
 };
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function PlayersPage({
   searchParams,
@@ -33,11 +38,11 @@ export default async function PlayersPage({
             Player research
           </p>
           <h1 className="mt-3 text-3xl font-black text-white sm:text-5xl">
-            Prop opportunity scanner
+            Prop research model
           </h1>
           <p className="mt-3 max-w-3xl text-slate-300">
             Compare player averages, splits, usage, minutes, hit rates, consistency, and
-            opponent matchup context before saving a pick.
+            opponent matchup context once a production stats feed is connected.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -58,6 +63,14 @@ export default async function PlayersPage({
           ))}
         </div>
       </div>
+      <Card className="mb-6 border-amber-400/20 bg-amber-500/10">
+        <Badge variant="warning">Demo metrics</Badge>
+        <p className="mt-3 text-sm leading-6 text-amber-100">
+          Player averages, hit rates, usage, minutes, and matchup grades are demo research
+          data right now. Live player props require a stats/props provider or Supabase
+          ingestion job before these should be used for real betting decisions.
+        </p>
+      </Card>
       <PlayerResearchGrid players={players} research={dashboard.playerEdges} />
     </div>
   );

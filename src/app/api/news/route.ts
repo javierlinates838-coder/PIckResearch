@@ -4,6 +4,9 @@ import { ok, validationError } from "@/lib/api/responses";
 import { listNews } from "@/lib/repositories/research";
 import { newsQuerySchema } from "@/lib/validators/research";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   const parsed = newsQuerySchema.safeParse({
     sport: request.nextUrl.searchParams.get("sport") ?? undefined,
@@ -16,5 +19,9 @@ export async function GET(request: NextRequest) {
   }
 
   const items = await listNews(parsed.data);
-  return ok(items);
+  return ok(items, {
+    headers: {
+      "Cache-Control": "no-store",
+    },
+  });
 }

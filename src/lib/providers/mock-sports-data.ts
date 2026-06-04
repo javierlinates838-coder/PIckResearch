@@ -653,6 +653,31 @@ export async function getMockDashboardData(sport?: SportKey): Promise<DashboardD
     news: dashboardNews,
     playerEdges,
     teamTrends,
+    meta: {
+      fetchedAt: new Date().toISOString(),
+      sources: {
+        games: "mock",
+        odds: "mock",
+        splits: "mock",
+        news: "mock",
+        playerEdges: "mock",
+        teamTrends: "mock",
+      },
+      providerStatus: {
+        newsapi: {
+          configured: false,
+          detectedAlias: null,
+          publicKeyDetected: false,
+        },
+        theOddsApi: {
+          configured: false,
+          detectedAlias: null,
+          publicKeyDetected: false,
+        },
+      },
+      providerErrors: {},
+      warnings: ["Demo data is active because live providers are not configured."],
+    },
   };
 }
 

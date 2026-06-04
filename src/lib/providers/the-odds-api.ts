@@ -43,6 +43,21 @@ interface FetchOddsOptions {
   dateFormat?: "iso" | "unix";
 }
 
+export interface TheOddsApiDiagnostics {
+  requestedSportKeys: string[];
+  succeededSportKeys: string[];
+  failedSportKeys: string[];
+  errors: string[];
+  requestsRemaining?: string | null;
+  requestsUsed?: string | null;
+  requestsLast?: string | null;
+}
+
+export interface TheOddsApiOddsResult {
+  events: TheOddsApiEvent[];
+  diagnostics: TheOddsApiDiagnostics;
+}
+
 const marketMap: Record<string, MarketType> = {
   h2h: "moneyline",
   spreads: "spread",
@@ -107,16 +122,14 @@ export function buildTheOddsApiOddsUrl(sportKey: string, options?: FetchOddsOpti
 
 export async function fetchTheOddsApiOdds(options?: FetchOddsOptions) {
   const sportKeys = resolveTheOddsApiSportKeys(options);
-  const responses = await Promise.all(
+  const results = await Promise.allSettled(
     sportKeys.map(async (sportKey) => {
       const url = buildTheOddsApiOddsUrl(sportKey, options);
       const response = await fetch(url, {
         headers: {
           Accept: "application/json",
         },
-        next: {
-          revalidate: 60,
-        },
+        cache: "no-store",
       });
 
       if (!response.ok) {
@@ -124,11 +137,44 @@ export async function fetchTheOddsApiOdds(options?: FetchOddsOptions) {
         throw new Error(`The Odds API request failed for ${sportKey}: ${response.status} ${message}`);
       }
 
-      return (await response.json()) as TheOddsApiEvent[];
+      return {
+        sportKey,
+        events: (await response.json()) as TheOddsApiEvent[],
+        headers: {
+          requestsRemaining: response.headers.get("x-requests-remaining"),
+          requestsUsed: response.headers.get("x-requests-used"),
+          requestsLast: response.headers.get("x-requests-last"),
+        },
+      };
     }),
   );
 
-  return responses.flat();
+  const fulfilled = results.filter((result) => result.status === "fulfilled");
+  const rejected = results.filter((result) => result.status === "rejected");
+  const events = fulfilled.flatMap((result) => result.value.events);
+  const lastHeader = fulfilled.at(-1)?.value.headers;
+  const diagnostics: TheOddsApiDiagnostics = {
+    requestedSportKeys: sportKeys,
+    succeededSportKeys: fulfilled.map((result) => result.value.sportKey),
+    failedSportKeys: sportKeys.filter(
+      (sportKey) => !fulfilled.some((result) => result.value.sportKey === sportKey),
+    ),
+    errors: rejected.map((result) =>
+      result.reason instanceof Error ? result.reason.message : String(result.reason),
+    ),
+    requestsRemaining: lastHeader?.requestsRemaining,
+    requestsUsed: lastHeader?.requestsUsed,
+    requestsLast: lastHeader?.requestsLast,
+  };
+
+  if (!fulfilled.length && rejected.length) {
+    throw new Error(diagnostics.errors.join("; "));
+  }
+
+  return {
+    events,
+    diagnostics,
+  };
 }
 
 export function normalizeTheOddsApiGames(events: TheOddsApiEvent[]): Game[] {

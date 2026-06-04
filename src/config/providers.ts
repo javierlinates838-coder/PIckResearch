@@ -28,18 +28,48 @@ export const defaultNewsApiQueries: Record<SportKey, string> = {
   esports: '(esports OR "League of Legends" OR Counter-Strike OR Dota) AND (roster OR lineup OR injury)',
 };
 
+const newsApiPrivateKeyAliases = ["NEWSAPI_API_KEY", "NEWS_API_KEY", "NEWSAPI_KEY"] as const;
+const newsApiPublicKeyAliases = ["NEXT_PUBLIC_NEWSAPI_API_KEY", "NEXT_PUBLIC_NEWS_API_KEY"] as const;
+const theOddsApiPrivateKeyAliases = [
+  "THE_ODDS_API_KEY",
+  "ODDS_API_KEY",
+  "THEODDSAPI_API_KEY",
+  "THE_ODDSAPI_API_KEY",
+] as const;
+const theOddsApiPublicKeyAliases = [
+  "NEXT_PUBLIC_THE_ODDS_API_KEY",
+  "NEXT_PUBLIC_ODDS_API_KEY",
+] as const;
+
+function findConfiguredEnvName(names: readonly string[]) {
+  return names.find((name) => Boolean(process.env[name]));
+}
+
+function getEnvValue(names: readonly string[]) {
+  const configuredName = findConfiguredEnvName(names);
+
+  return configuredName ? process.env[configuredName] : undefined;
+}
+
 export function getNewsApiKey() {
-  return process.env.NEWSAPI_API_KEY ?? process.env.NEWS_API_KEY;
+  return getEnvValue(newsApiPrivateKeyAliases);
 }
 
 export function getTheOddsApiKey() {
-  return process.env.THE_ODDS_API_KEY ?? process.env.ODDS_API_KEY;
+  return getEnvValue(theOddsApiPrivateKeyAliases);
 }
 
 export function getProviderStatus() {
+  const newsApiDetectedAlias = findConfiguredEnvName(newsApiPrivateKeyAliases);
+  const theOddsApiDetectedAlias = findConfiguredEnvName(theOddsApiPrivateKeyAliases);
+
   return {
     newsapi: {
       configured: Boolean(getNewsApiKey()),
+      expectedKey: "NEWSAPI_API_KEY",
+      acceptedAliases: [...newsApiPrivateKeyAliases],
+      detectedAlias: newsApiDetectedAlias ?? null,
+      publicKeyDetected: Boolean(findConfiguredEnvName(newsApiPublicKeyAliases)),
       baseUrl: process.env.NEWSAPI_BASE_URL ?? "https://newsapi.org/v2",
       language: process.env.NEWSAPI_LANGUAGE ?? "en",
       sortBy: process.env.NEWSAPI_SORT_BY ?? "publishedAt",
@@ -47,6 +77,10 @@ export function getProviderStatus() {
     },
     theOddsApi: {
       configured: Boolean(getTheOddsApiKey()),
+      expectedKey: "THE_ODDS_API_KEY",
+      acceptedAliases: [...theOddsApiPrivateKeyAliases],
+      detectedAlias: theOddsApiDetectedAlias ?? null,
+      publicKeyDetected: Boolean(findConfiguredEnvName(theOddsApiPublicKeyAliases)),
       baseUrl: process.env.THE_ODDS_API_BASE_URL ?? "https://api.the-odds-api.com/v4",
       regions: process.env.THE_ODDS_API_REGIONS ?? "us",
       markets: process.env.THE_ODDS_API_MARKETS ?? "h2h,spreads,totals",
