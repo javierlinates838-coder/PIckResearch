@@ -1,21 +1,33 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 
 import { SiteHeader } from "@/components/layout/site-header";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "PickResearch",
-    template: "%s | PickResearch",
+    default: "ResellAI",
+    template: "%s | ResellAI",
   },
   description:
-    "Sports research platform with live odds/news provider adapters, data-quality labels, player props, team trends, and AI betting analysis workflows.",
+    "AI-powered eBay reseller assistant — photo identification, market research, listing generation, photo enhancement, profit calculator, and one-click publishing.",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f5f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -24,10 +36,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <SiteHeader />
-        <main>{children}</main>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} gradient-mesh antialiased`}>
+        <ThemeProvider>
+          <SiteHeader />
+          <main className="mx-auto max-w-6xl px-4 py-8 pb-24 sm:px-6">{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

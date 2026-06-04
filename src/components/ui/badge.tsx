@@ -1,30 +1,33 @@
-import type { PropsWithChildren } from "react";
+import type { HTMLAttributes, PropsWithChildren } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
-const variants = {
-  neutral: "border-zinc-500/25 bg-zinc-950/60 text-zinc-100",
-  positive: "border-lime-300/40 bg-lime-400/10 text-lime-100",
-  warning: "border-orange-300/40 bg-orange-400/10 text-orange-100",
-  danger: "border-red-300/40 bg-red-500/10 text-red-100",
-  info: "border-yellow-300/35 bg-yellow-400/10 text-yellow-100",
-};
+export const badgeTones = {
+  default: "bg-black/5 text-[var(--foreground)] dark:bg-white/10",
+  success: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
+  warning: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  accent: "bg-blue-500/15 text-blue-600 dark:text-blue-400",
+  muted: "bg-black/5 text-[var(--muted)] dark:bg-white/5",
+} as const;
+
+const tones = badgeTones;
 
 export function Badge({
   children,
-  variant = "neutral",
+  tone = "default",
   className,
-}: PropsWithChildren<{
-  variant?: keyof typeof variants;
-  className?: string;
-}>) {
+  ...props
+}: PropsWithChildren<
+  HTMLAttributes<HTMLSpanElement> & { tone?: keyof typeof tones }
+>) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium",
-        variants[variant],
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        tones[tone],
         className,
       )}
+      {...props}
     >
       {children}
     </span>

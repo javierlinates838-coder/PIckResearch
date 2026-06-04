@@ -1,7 +1,7 @@
 {
-  "name": "pickresearch",
-  "version": "0.1.0",
-  "description": "Sports research platform for betting edges and player prop opportunities.",
+  "name": "resellai",
+  "version": "1.0.0",
+  "description": "AI-powered eBay reseller assistant for faster listings and smarter pricing.",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,32 +10,28 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/javierlinates838-coder/PIckResearch.git"
-  },
   "keywords": [
-    "sports",
-    "analytics",
-    "betting",
-    "research",
+    "ebay",
+    "reseller",
+    "ai",
+    "listing",
     "nextjs",
     "supabase"
   ],
-  "author": "",
   "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/javierlinates838-coder/PIckResearch/issues"
-  },
-  "homepage": "https://github.com/javierlinates838-coder/PIckResearch#readme",
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.0",
     "@supabase/supabase-js": "^2.107.0",
+    "ai": "^5.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.23.0",
     "lucide-react": "^1.17.0",
     "next": "^16.2.7",
+    "next-themes": "^0.4.6",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "recharts": "^3.7.0",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },

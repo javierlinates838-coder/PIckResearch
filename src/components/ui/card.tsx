@@ -9,10 +9,7 @@ export function Card({
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) {
   return (
     <section
-      className={cn(
-        "rounded-3xl border border-orange-200/10 bg-[#0b0d09]/80 p-5 shadow-2xl shadow-black/30 backdrop-blur",
-        className,
-      )}
+      className={cn("glass rounded-3xl p-5 shadow-sm", className)}
       {...props}
     >
       {children}
@@ -30,14 +27,16 @@ export function CardHeader({
   description?: string;
 }) {
   return (
-    <div className="mb-5 space-y-1">
+    <div className="mb-4 space-y-1">
       {eyebrow ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-lime-200">
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--accent)]">
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="text-xl font-semibold text-white">{title}</h2>
-      {description ? <p className="text-sm text-slate-400">{description}</p> : null}
+      <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+      {description ? (
+        <p className="text-sm text-[var(--muted)]">{description}</p>
+      ) : null}
     </div>
   );
 }

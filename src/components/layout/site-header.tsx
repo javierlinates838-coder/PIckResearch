@@ -1,33 +1,91 @@
-import Link from "next/link";
+"use client";
 
-import { mainNavigation } from "@/config/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, Moon, Sun, Package } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useState } from "react";
+
+import { mainNav } from "@/config/navigation";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils/cn";
 
 export function SiteHeader() {
+  const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-orange-300/10 bg-[#070906]/90 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-lime-300 via-orange-400 to-red-500 font-black text-black shadow-lg shadow-orange-500/25">
-            PR
-          </div>
-          <div>
-            <p className="text-lg font-bold text-white">PickResearch</p>
-            <p className="text-xs text-orange-200/75">DFS prop finder</p>
-          </div>
+    <header className="sticky top-0 z-50 border-b border-[var(--card-border)] glass">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-white">
+            <Package className="h-4 w-4" />
+          </span>
+          <span className="hidden sm:inline">ResellAI</span>
         </Link>
-        <nav className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end">
-          {mainNavigation.map((item) => (
+
+        <nav className="hidden items-center gap-1 md:flex">
+          {mainNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-orange-50 transition hover:border-lime-300/70 hover:bg-lime-400/10 hover:text-white"
+              className={cn(
+                "rounded-full px-3 py-1.5 text-sm transition",
+                pathname === item.href
+                  ? "bg-[var(--accent)] text-white"
+                  : "text-[var(--muted)] hover:text-[var(--foreground)]",
+              )}
             >
-              <item.icon className="size-4" />
               {item.label}
             </Link>
           ))}
         </nav>
+
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Toggle theme"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            <Sun className="h-4 w-4 dark:hidden" />
+            <Moon className="hidden h-4 w-4 dark:block" />
+          </Button>
+          <Link href="/listings/new" className="hidden sm:block">
+            <Button size="sm">+ New</Button>
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            aria-label="Menu"
+            onClick={() => setOpen(!open)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </div>
       </div>
+
+      {open ? (
+        <nav className="border-t border-[var(--card-border)] px-4 py-3 md:hidden">
+          {mainNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className={cn(
+                "block rounded-xl px-3 py-2 text-sm",
+                pathname === item.href
+                  ? "bg-[var(--accent)] text-white"
+                  : "text-[var(--muted)]",
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      ) : null}
     </header>
   );
 }
