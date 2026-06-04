@@ -23,14 +23,14 @@ export default function HomePage() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               href="/finder"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300 px-6 py-3 font-semibold text-slate-950 shadow-lg shadow-fuchsia-500/25 transition hover:scale-[1.01]"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-lime-300 via-orange-400 to-red-500 px-6 py-3 font-semibold text-black shadow-lg shadow-orange-500/25 transition hover:scale-[1.01]"
             >
               Open Pick Finder
               <ArrowRight className="size-4" />
             </Link>
             <Link
               href="/players"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-200/25 bg-cyan-300/10 px-6 py-3 font-semibold text-cyan-50 transition hover:border-cyan-100/60"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-lime-200/25 bg-lime-300/10 px-6 py-3 font-semibold text-lime-50 transition hover:border-lime-100/60"
             >
               Browse players
             </Link>
@@ -56,7 +56,7 @@ export default function HomePage() {
             },
           ].map((item) => (
             <div key={item.title} className="flex gap-4 rounded-2xl bg-white/[0.03] p-4">
-              <item.icon className="mt-1 size-5 text-cyan-200" />
+              <item.icon className="mt-1 size-5 text-lime-200" />
               <div>
                 <h2 className="font-semibold text-white">{item.title}</h2>
                 <p className="mt-1 text-sm leading-6 text-slate-400">{item.text}</p>

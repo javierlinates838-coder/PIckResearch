@@ -41,7 +41,7 @@ export default async function NewsPage({
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-lime-200">
             News engine
           </p>
           <h1 className="mt-3 text-3xl font-black text-white sm:text-5xl">
@@ -71,7 +71,7 @@ export default async function NewsPage({
         </div>
       </div>
 
-      <Card className="mb-6 border-fuchsia-300/20 bg-fuchsia-500/10">
+      <Card className="mb-6 border-orange-300/20 bg-orange-500/10">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <Badge variant={news.meta.source === "newsapi" ? "positive" : "neutral"}>
@@ -83,19 +83,19 @@ export default async function NewsPage({
                 (news.meta.providerStatus.configured ? "configured" : "missing")}
             </p>
           </div>
-          <a className="text-sm font-semibold text-cyan-200 hover:text-cyan-100" href="/api/providers/status">
+          <a className="text-sm font-semibold text-lime-200 hover:text-lime-100" href="/api/providers/status">
             Provider status
           </a>
         </div>
         {news.meta.warnings.length || news.meta.providerError ? (
           <div className="mt-4 grid gap-3 lg:grid-cols-2">
             {news.meta.warnings.map((warning) => (
-              <p key={warning} className="rounded-2xl border border-fuchsia-300/20 bg-fuchsia-500/10 p-3 text-sm text-fuchsia-50/85">
+              <p key={warning} className="rounded-2xl border border-orange-300/20 bg-orange-500/10 p-3 text-sm text-orange-50/85">
                 {warning}
               </p>
             ))}
             {news.meta.providerError ? (
-              <p className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-3 text-sm text-rose-100">
+              <p className="rounded-2xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-100">
                 NewsAPI error: {news.meta.providerError}
               </p>
             ) : null}
@@ -132,7 +132,7 @@ export default async function NewsPage({
                   href={item.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-4 block text-xl font-semibold text-white hover:text-cyan-200"
+                  className="mt-4 block text-xl font-semibold text-white hover:text-lime-200"
                 >
                   {item.title}
                 </a>

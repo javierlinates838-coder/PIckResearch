@@ -57,7 +57,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
 
   return (
     <div className="space-y-6">
-      <Card className="border-fuchsia-300/20 bg-fuchsia-500/10">
+      <Card className="border-orange-300/20 bg-orange-500/10">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="flex flex-wrap gap-2">
@@ -98,7 +98,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
                 Odds quota remaining: {data.meta.providerStatus.theOddsApi.requestsRemaining}
               </p>
             ) : null}
-            <a className="mt-3 inline-block text-cyan-200 hover:text-cyan-100" href="/api/providers/status">
+            <a className="mt-3 inline-block text-lime-200 hover:text-lime-100" href="/api/providers/status">
               View provider status
             </a>
           </div>
@@ -106,17 +106,17 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
         {data.meta.warnings.length || data.meta.providerErrors.newsapi || data.meta.providerErrors.theOddsApi ? (
           <div className="mt-5 grid gap-3 lg:grid-cols-2">
             {data.meta.warnings.map((warning) => (
-              <p key={warning} className="rounded-2xl border border-fuchsia-300/20 bg-fuchsia-500/10 p-3 text-sm text-fuchsia-50/85">
+              <p key={warning} className="rounded-2xl border border-orange-300/20 bg-orange-500/10 p-3 text-sm text-orange-50/85">
                 {warning}
               </p>
             ))}
             {data.meta.providerErrors.theOddsApi ? (
-              <p className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-3 text-sm text-rose-100">
+              <p className="rounded-2xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-100">
                 The Odds API error: {data.meta.providerErrors.theOddsApi}
               </p>
             ) : null}
             {data.meta.providerErrors.newsapi ? (
-              <p className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-3 text-sm text-rose-100">
+              <p className="rounded-2xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-100">
                 NewsAPI error: {data.meta.providerErrors.newsapi}
               </p>
             ) : null}
@@ -172,7 +172,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
                     {game.venue} - {formatTime(game.startsAt)}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-cyan-200">
+                <div className="flex items-center gap-2 text-sm text-lime-200">
                   <Activity className="size-4" />
                   {game.sport.toUpperCase()}
                 </div>
@@ -258,11 +258,11 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
                     Tickets {split.publicTicketsPct}%
                   </p>
                   <p className="flex items-center gap-2 text-slate-300">
-                    <TrendingUp className="size-4 text-cyan-200" />
+                    <TrendingUp className="size-4 text-lime-200" />
                     Money {split.publicMoneyPct}%
                   </p>
                 </div>
-                <p className="mt-3 text-sm text-cyan-200">
+                <p className="mt-3 text-sm text-lime-200">
                   Sharp side: {split.sharpSide.toUpperCase()}
                 </p>
               </div>
@@ -300,7 +300,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
                     href={item.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 block font-semibold text-white hover:text-cyan-200"
+                    className="mt-3 block font-semibold text-white hover:text-lime-200"
                   >
                     {item.title}
                   </a>

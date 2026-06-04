@@ -41,7 +41,7 @@ export default async function PlayersPage({
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-lime-200">
             Player research
           </p>
           <h1 className="mt-3 text-3xl font-black text-white sm:text-5xl">
@@ -70,15 +70,15 @@ export default async function PlayersPage({
           ))}
         </div>
       </div>
-      <Card className="mb-6 border-fuchsia-300/20 bg-fuchsia-500/10">
+      <Card className="mb-6 border-orange-300/20 bg-orange-500/10">
         <Badge variant="warning">Demo metrics</Badge>
-        <p className="mt-3 text-sm leading-6 text-fuchsia-50/80">
+        <p className="mt-3 text-sm leading-6 text-orange-50/80">
           Player stat pages are functional and clickable now. The underlying rows remain demo
           DFS props until a real projections/stat-log provider is connected. Odds/news APIs do not
           add players here. Current pool: {dfsSummary.playerCount} demo players.
         </p>
       </Card>
-      <Card className="mb-6 border-cyan-300/20 bg-cyan-400/10">
+      <Card className="mb-6 border-lime-300/20 bg-lime-400/10">
         <form action="/players" className="grid gap-3 md:grid-cols-[1fr_auto_auto]">
           <label className="sr-only" htmlFor="player-search">
             Search players
@@ -89,12 +89,12 @@ export default async function PlayersPage({
             type="search"
             defaultValue={filters.q}
             placeholder="Search player name..."
-            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/70"
+            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-lime-300/70"
           />
           <select
             name="sport"
             defaultValue={filters.sport ?? ""}
-            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none focus:border-cyan-300/70"
+            className="min-h-12 rounded-2xl border border-white/10 bg-black/25 px-4 text-sm text-white outline-none focus:border-lime-300/70"
           >
             <option value="">All sports</option>
             {supportedSports.map((sport) => (
@@ -105,7 +105,7 @@ export default async function PlayersPage({
           </select>
           <button
             type="submit"
-            className="min-h-12 rounded-2xl bg-gradient-to-r from-fuchsia-400 via-violet-400 to-cyan-300 px-5 text-sm font-black text-slate-950 shadow-lg shadow-fuchsia-500/20"
+            className="min-h-12 rounded-2xl bg-gradient-to-r from-lime-300 via-orange-400 to-red-500 px-5 text-sm font-black text-black shadow-lg shadow-orange-500/20"
           >
             Search
           </button>
@@ -116,7 +116,7 @@ export default async function PlayersPage({
           <Link
             key={item.player.id}
             href={`/players/${item.player.id}`}
-            className="rounded-3xl border border-fuchsia-200/10 bg-[#090b1f]/75 p-5 shadow-2xl shadow-fuchsia-950/20 transition hover:border-cyan-300/50 hover:bg-white/[0.06]"
+            className="rounded-3xl border border-orange-200/10 bg-[#0b0d09]/80 p-5 shadow-2xl shadow-black/30 transition hover:border-lime-300/50 hover:bg-white/[0.06]"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -136,11 +136,11 @@ export default async function PlayersPage({
             <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm">
               <div className="rounded-2xl bg-white/[0.03] p-3">
                 <p className="text-slate-500">L10</p>
-                <p className="font-semibold text-cyan-100">{item.l10HitRate}%</p>
+                <p className="font-semibold text-lime-100">{item.l10HitRate}%</p>
               </div>
               <div className="rounded-2xl bg-white/[0.03] p-3">
                 <p className="text-slate-500">Diff</p>
-                <p className="font-semibold text-fuchsia-100">+{item.diff}</p>
+                <p className="font-semibold text-orange-100">+{item.diff}</p>
               </div>
               <div className="rounded-2xl bg-white/[0.03] p-3">
                 <p className="text-slate-500">Streak</p>
