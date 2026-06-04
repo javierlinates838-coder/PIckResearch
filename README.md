@@ -60,6 +60,26 @@ The app uses mock provider data for local development until live provider adapte
 - `GET /api/providers/status` reports whether provider keys are configured without exposing secrets.
 - Dashboard and news data prefer live provider data when keys are configured and fall back to mock data if keys are missing or providers are unavailable.
 
+### Vercel Environment Variable Troubleshooting
+
+If Vercel is not reading provider keys:
+
+1. Go to Vercel Project -> Settings -> Environment Variables.
+2. Add keys for the same environment you are deploying:
+   - Pull request deployments use `Preview`.
+   - Production domain deployments use `Production`.
+   - Local `vercel dev` uses `Development`.
+3. Use exact, case-sensitive names:
+   - `THE_ODDS_API_KEY`
+   - `NEWSAPI_API_KEY`
+4. Redeploy after adding or changing env vars. Existing deployments do not automatically pick up new values.
+5. Visit `/api/providers/status`.
+   - `configured: true` means the server can read the private key.
+   - `detectedAlias` shows which accepted private env name Vercel is reading.
+   - `publicKeyDetected: true` means a `NEXT_PUBLIC_*` key was detected; remove it and use the private key name instead.
+
+Accepted private fallbacks are `ODDS_API_KEY`, `THEODDSAPI_API_KEY`, `THE_ODDSAPI_API_KEY`, `NEWS_API_KEY`, and `NEWSAPI_KEY`, but the preferred names are `THE_ODDS_API_KEY` and `NEWSAPI_API_KEY`.
+
 ## Database
 
 Apply the Supabase schema:
