@@ -69,12 +69,12 @@ export function PickFinderBoard({
 
   return (
     <div className="space-y-6">
-      <Card className="border-amber-400/20 bg-amber-500/10">
+      <Card className="overflow-hidden border-fuchsia-300/20 bg-gradient-to-br from-fuchsia-500/15 via-violet-500/10 to-cyan-400/10">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <Badge variant="warning">PickFinder-style workflow - demo projections</Badge>
+            <Badge variant="warning">DFS prop board - demo projections</Badge>
             <h2 className="mt-3 text-xl font-semibold text-white">Projection finder</h2>
-            <p className="mt-2 max-w-4xl text-sm leading-6 text-amber-100">
+            <p className="mt-2 max-w-4xl text-sm leading-6 text-violet-50/80">
               This screen is shaped like a PickFinder projections page: ranked picks, imported-line
               style app filters, L5/L10/L15 hit rates, H2H, streaks, line difference, and a pick
               builder. The calculations currently use demo player metrics until a real projections
@@ -83,7 +83,7 @@ export function PickFinderBoard({
           </div>
           <Link
             href="/players"
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-amber-300/40 px-4 py-2 text-sm font-semibold text-amber-100 hover:bg-amber-300/10"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-cyan-200/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-300/20"
           >
             Deep player research
           </Link>
@@ -123,7 +123,7 @@ export function PickFinderBoard({
                     sort: value,
                     minHitRate: filters.minHitRate ? String(filters.minHitRate) : undefined,
                   })}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-2 text-sm text-slate-300 hover:border-emerald-300/60 hover:text-white"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-slate-200 hover:border-fuchsia-300/60 hover:bg-fuchsia-300/10 hover:text-white"
                 >
                   <ArrowDownUp className="size-3" />
                   {label}
@@ -141,7 +141,7 @@ export function PickFinderBoard({
                     sort: filters.sort,
                     minHitRate: filters.minHitRate ? String(filters.minHitRate) : undefined,
                   })}
-                  className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-300 hover:border-emerald-300/60 hover:text-white"
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-slate-200 hover:border-cyan-300/60 hover:bg-cyan-300/10 hover:text-white"
                 >
                   {item.label}
                 </a>
@@ -158,14 +158,14 @@ export function PickFinderBoard({
                     sort: filters.sort,
                     minHitRate: filters.minHitRate ? String(filters.minHitRate) : undefined,
                   })}
-                  className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-300 hover:border-emerald-300/60 hover:text-white"
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-slate-200 hover:border-violet-300/60 hover:bg-violet-300/10 hover:text-white"
                 >
                   {app}
                 </a>
               ))}
               <a
                 href="/finder"
-                className="inline-flex items-center gap-2 rounded-full border border-rose-300/30 px-3 py-2 text-sm text-rose-100 hover:bg-rose-500/10"
+                className="inline-flex items-center gap-2 rounded-full border border-rose-300/30 bg-rose-500/5 px-3 py-2 text-sm text-rose-100 hover:bg-rose-500/10"
               >
                 <SlidersHorizontal className="size-3" />
                 Reset
@@ -182,12 +182,12 @@ export function PickFinderBoard({
           />
           <div className="space-y-3">
             {builderPicks.map((pick) => (
-              <div key={pick.id} className="rounded-2xl bg-white/[0.03] p-4">
+              <div key={pick.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <a
                       href={`/players/${pick.player.id}`}
-                      className="font-semibold text-white hover:text-emerald-200"
+                      className="font-semibold text-white hover:text-cyan-200"
                     >
                       {pick.player.name}
                     </a>
@@ -210,9 +210,9 @@ export function PickFinderBoard({
           title="Ranked prop opportunities"
           description="Sorted like a prop finder: edge first, then hit-rate, matchup, streak, and line-diff context."
         />
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-3xl border border-white/10 bg-black/10 p-2">
           <table className="w-full min-w-[980px] border-separate border-spacing-y-3 text-left text-sm">
-            <thead className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            <thead className="text-xs uppercase tracking-[0.2em] text-violet-200/55">
               <tr>
                 <th className="px-3">Pick</th>
                 <th className="px-3">App</th>
@@ -230,16 +230,16 @@ export function PickFinderBoard({
             </thead>
             <tbody>
               {opportunities.map((pick) => (
-                <tr key={pick.id} className="rounded-2xl bg-white/[0.03] text-slate-300">
+                <tr key={pick.id} className="rounded-2xl bg-white/[0.04] text-slate-200">
                   <td className="rounded-l-2xl px-3 py-4">
                     <div className="flex items-start gap-3">
-                      <div className="grid size-10 place-items-center rounded-2xl bg-emerald-400/10 text-emerald-200">
+                      <div className="grid size-10 place-items-center rounded-2xl bg-gradient-to-br from-fuchsia-400/20 to-cyan-300/20 text-cyan-100">
                         <Flame className="size-4" />
                       </div>
                       <div>
                         <a
                           href={`/players/${pick.player.id}`}
-                          className="font-semibold text-white hover:text-emerald-200"
+                          className="font-semibold text-white hover:text-cyan-200"
                         >
                           {pick.player.name}
                         </a>
@@ -261,7 +261,7 @@ export function PickFinderBoard({
                     <span className="font-semibold text-white">{pick.side.toUpperCase()}</span> {pick.line}
                   </td>
                   <td className="px-3 py-4">{pick.projection}</td>
-                  <td className="px-3 py-4 text-emerald-200">{pick.diff > 0 ? "+" : ""}{pick.diff}</td>
+                  <td className="px-3 py-4 text-cyan-200">{pick.diff > 0 ? "+" : ""}{pick.diff}</td>
                   <td className="px-3 py-4">{pick.l5HitRate}%</td>
                   <td className="px-3 py-4 font-semibold text-white">{pick.l10HitRate}%</td>
                   <td className="px-3 py-4">{pick.l15HitRate}%</td>
@@ -273,7 +273,7 @@ export function PickFinderBoard({
                   <td className="rounded-r-2xl px-3 py-4">
                     <a
                       href={`/players/${pick.player.id}`}
-                      className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-2 text-xs font-semibold text-slate-200 hover:border-emerald-300/60"
+                      className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-100 hover:border-cyan-200"
                     >
                       <Plus className="size-3" />
                       Research
@@ -293,8 +293,8 @@ export function PickFinderBoard({
 
       <Card>
         <div className="flex items-start gap-3">
-          <Star className="mt-1 size-5 text-amber-300" />
-          <p className="text-sm leading-6 text-slate-300">
+          <Star className="mt-1 size-5 text-fuchsia-200" />
+          <p className="text-sm leading-6 text-violet-50/75">
             Next production step: replace demo projection rows with imported props from PrizePicks,
             Underdog, Sleeper, and sportsbook markets; then calculate real diff, hit rates, and
             pick-builder exports from persisted stat logs.

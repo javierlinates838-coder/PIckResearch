@@ -10,7 +10,7 @@ export function Card({
   return (
     <section
       className={cn(
-        "rounded-3xl border border-white/10 bg-slate-950/70 p-5 shadow-2xl shadow-black/20 backdrop-blur",
+        "rounded-3xl border border-fuchsia-200/10 bg-[#090b1f]/75 p-5 shadow-2xl shadow-fuchsia-950/20 backdrop-blur",
         className,
       )}
       {...props}
@@ -32,7 +32,7 @@ export function CardHeader({
   return (
     <div className="mb-5 space-y-1">
       {eyebrow ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-200">
           {eyebrow}
         </p>
       ) : null}

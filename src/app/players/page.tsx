@@ -38,7 +38,7 @@ export default async function PlayersPage({
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-300">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
             Player research
           </p>
           <h1 className="mt-3 text-3xl font-black text-white sm:text-5xl">
@@ -67,9 +67,9 @@ export default async function PlayersPage({
           ))}
         </div>
       </div>
-      <Card className="mb-6 border-amber-400/20 bg-amber-500/10">
+      <Card className="mb-6 border-fuchsia-300/20 bg-fuchsia-500/10">
         <Badge variant="warning">Demo metrics</Badge>
-        <p className="mt-3 text-sm leading-6 text-amber-100">
+        <p className="mt-3 text-sm leading-6 text-fuchsia-50/80">
           Player stat pages are functional and clickable now. The underlying rows remain demo
           DFS props until a real projections/stat-log provider is connected.
         </p>
@@ -79,7 +79,7 @@ export default async function PlayersPage({
           <a
             key={item.player.id}
             href={`/players/${item.player.id}`}
-            className="rounded-3xl border border-white/10 bg-slate-950/70 p-5 shadow-2xl shadow-black/20 transition hover:border-emerald-300/50"
+            className="rounded-3xl border border-fuchsia-200/10 bg-[#090b1f]/75 p-5 shadow-2xl shadow-fuchsia-950/20 transition hover:border-cyan-300/50 hover:bg-white/[0.06]"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -99,11 +99,11 @@ export default async function PlayersPage({
             <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm">
               <div className="rounded-2xl bg-white/[0.03] p-3">
                 <p className="text-slate-500">L10</p>
-                <p className="font-semibold text-white">{item.l10HitRate}%</p>
+                <p className="font-semibold text-cyan-100">{item.l10HitRate}%</p>
               </div>
               <div className="rounded-2xl bg-white/[0.03] p-3">
                 <p className="text-slate-500">Diff</p>
-                <p className="font-semibold text-white">+{item.diff}</p>
+                <p className="font-semibold text-fuchsia-100">+{item.diff}</p>
               </div>
               <div className="rounded-2xl bg-white/[0.03] p-3">
                 <p className="text-slate-500">Streak</p>
