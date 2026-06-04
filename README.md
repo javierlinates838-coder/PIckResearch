@@ -1,6 +1,6 @@
 # PickResearch
 
-Production-ready sports research platform for finding betting edges and player prop opportunities.
+DFS player prop research platform for finding, filtering, and researching prop opportunities.
 
 ## Stack
 
@@ -12,10 +12,9 @@ Production-ready sports research platform for finding betting edges and player p
 
 ## Features
 
-- Research dashboard with provider-backed odds/news, data-quality labels, provider warnings, and demo fallbacks
 - Pick Finder projections board with app filters, stat filters, line difference, L5/L10/L15 hit rates, H2H, streaks, and pick-builder queue
-- Player research with last 5/10/season averages, splits, trends, consistency, hit rates, and matchup notes
-- Team research with ratings, pace, recent form, trends, and injury impact
+- Clickable player DFS research pages with current line, projection, recent averages, hit rates, streak, bar chart, and last-15 logs
+- Provider-backed odds/news diagnostics remain available, but the primary product surface is player DFS props
 - News engine for injuries, suspensions, lineups, coaching, transactions, and general alerts
 - Server-only AI analysis endpoint
 - Authenticated saved picks and favorite player/team APIs
@@ -70,8 +69,8 @@ The app uses mock provider data for local development until live provider adapte
 | Odds | The Odds API or demo fallback | Live latest prices. Historical movement needs persisted snapshots. |
 | News | NewsAPI or demo fallback | Live when `NEWSAPI_API_KEY` is configured. |
 | Public betting splits | Not live yet | Requires a dedicated splits provider or ingestion table. |
-| Player research metrics | Demo metrics | Requires stats/props provider ingestion before real betting use. |
-| Team research metrics | Demo metrics | Requires stats provider ingestion before real betting use. |
+| Player DFS research pages | Demo metrics | Functional UX; requires stats/props provider ingestion before real betting use. |
+| Team research metrics | De-emphasized | Team dashboards are not the primary product surface. |
 
 The dashboard displays source badges, provider warnings, and live/demo status so users can tell what is trustworthy live data versus placeholder research scaffolding.
 

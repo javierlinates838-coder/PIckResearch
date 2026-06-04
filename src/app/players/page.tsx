@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { PlayerResearchGrid } from "@/components/research/player-research-grid";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { supportedSports } from "@/config/sports";
-import { getDashboardResearch, listPlayers } from "@/lib/repositories/research";
+import { listPickOpportunities } from "@/lib/repositories/research";
 import { listQuerySchema } from "@/lib/validators/research";
 
 export const metadata: Metadata = {
@@ -25,10 +25,14 @@ export default async function PlayersPage({
     q: typeof params.q === "string" ? params.q : undefined,
   });
   const filters = parsed.success ? parsed.data : {};
-  const [players, dashboard] = await Promise.all([
-    listPlayers({ sport: filters.sport, query: filters.q }),
-    getDashboardResearch({ sport: filters.sport }),
-  ]);
+  const opportunities = await listPickOpportunities({
+    sport: filters.sport,
+    query: filters.q,
+    sort: "edge",
+  });
+  const uniquePlayers = Array.from(
+    new Map(opportunities.map((item) => [item.player.id, item])).values(),
+  );
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -41,37 +45,74 @@ export default async function PlayersPage({
             Prop research model
           </h1>
           <p className="mt-3 max-w-3xl text-slate-300">
-            Compare player averages, splits, usage, minutes, hit rates, consistency, and
-            opponent matchup context once a production stats feed is connected.
+            Open a player to see DFS prop lines, last-15 logs, hit rates, line comparison,
+            streaks, and matchup context.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <a
+          <Link
             href="/players"
             className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-300 hover:text-white"
           >
             All
-          </a>
+          </Link>
           {supportedSports.map((item) => (
-            <a
+            <Link
               key={item.key}
               href={`/players?sport=${item.key}`}
               className="rounded-full border border-white/10 px-3 py-2 text-sm text-slate-300 hover:text-white"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </div>
       </div>
       <Card className="mb-6 border-amber-400/20 bg-amber-500/10">
         <Badge variant="warning">Demo metrics</Badge>
         <p className="mt-3 text-sm leading-6 text-amber-100">
-          Player averages, hit rates, usage, minutes, and matchup grades are demo research
-          data right now. Live player props require a stats/props provider or Supabase
-          ingestion job before these should be used for real betting decisions.
+          Player stat pages are functional and clickable now. The underlying rows remain demo
+          DFS props until a real projections/stat-log provider is connected.
         </p>
       </Card>
-      <PlayerResearchGrid players={players} research={dashboard.playerEdges} />
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {uniquePlayers.map((item) => (
+          <a
+            key={item.player.id}
+            href={`/players/${item.player.id}`}
+            className="rounded-3xl border border-white/10 bg-slate-950/70 p-5 shadow-2xl shadow-black/20 transition hover:border-emerald-300/50"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <Badge variant="info">{item.sport.toUpperCase()}</Badge>
+                <h2 className="mt-3 text-xl font-semibold text-white">{item.player.name}</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  {item.player.position} - {item.team.abbreviation}
+                </p>
+              </div>
+              <Badge variant={item.edgeScore >= 80 ? "positive" : "warning"}>
+                {item.edgeScore}
+              </Badge>
+            </div>
+            <p className="mt-4 text-sm leading-6 text-slate-300">
+              {item.side.toUpperCase()} {item.line} {item.market.replace("player_", "").replaceAll("_", " ")}
+            </p>
+            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-sm">
+              <div className="rounded-2xl bg-white/[0.03] p-3">
+                <p className="text-slate-500">L10</p>
+                <p className="font-semibold text-white">{item.l10HitRate}%</p>
+              </div>
+              <div className="rounded-2xl bg-white/[0.03] p-3">
+                <p className="text-slate-500">Diff</p>
+                <p className="font-semibold text-white">+{item.diff}</p>
+              </div>
+              <div className="rounded-2xl bg-white/[0.03] p-3">
+                <p className="text-slate-500">Streak</p>
+                <p className="font-semibold text-white">{item.streak}</p>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
