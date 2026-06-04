@@ -36,6 +36,16 @@ export default async function PlayersPage({
   const uniquePlayers = Array.from(
     new Map(opportunities.map((item) => [item.player.id, item])).values(),
   );
+  const displaySummary =
+    dfsSummary.source === "theoddsapi"
+      ? {
+          ...dfsSummary,
+          playerCount: uniquePlayers.length,
+          propCount: opportunities.length,
+          sports: Array.from(new Set(opportunities.map((item) => item.sport))),
+          markets: Array.from(new Set(opportunities.map((item) => item.market))),
+        }
+      : dfsSummary;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -73,9 +83,11 @@ export default async function PlayersPage({
       <Card className="mb-6 border-orange-300/20 bg-orange-500/10">
         <Badge variant="warning">Demo metrics</Badge>
         <p className="mt-3 text-sm leading-6 text-orange-50/80">
-          Player stat pages are functional and clickable now. The underlying rows remain demo
-          DFS props until a real projections/stat-log provider is connected. Odds/news APIs do not
-          add players here. Current pool: {dfsSummary.playerCount} demo players.
+          Player stat pages are functional and clickable now.{" "}
+          {displaySummary.source === "theoddsapi"
+            ? "Players come from fresh OddsAPI event-level player-prop lines when available; stat logs still need a DFS/stat provider."
+            : "The underlying rows remain demo DFS props until a real projections/stat-log provider is connected."}{" "}
+          Current pool: {displaySummary.playerCount} players.
         </p>
       </Card>
       <Card className="mb-6 border-lime-300/20 bg-lime-400/10">
@@ -153,9 +165,10 @@ export default async function PlayersPage({
           <Card className="md:col-span-2 xl:col-span-3">
             <Badge variant="warning">No player found</Badge>
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              Search only covers the current demo DFS player pool: {dfsSummary.sports.join(", ")}.
-              Connected NewsAPI/The Odds API keys do not add DFS players. Connect{" "}
-              {dfsSummary.expectedProviderKey} or reset filters.
+              Search only covers the current {displaySummary.source === "theoddsapi" ? "live OddsAPI" : "demo DFS"} player pool: {displaySummary.sports.join(", ") || "selected live events"}.
+              {displaySummary.source === "theoddsapi"
+                ? " If empty, OddsAPI did not return player props for the selected market/sport."
+                : ` Connect ${displaySummary.expectedProviderKey} or reset filters.`}
             </p>
           </Card>
         ) : null}

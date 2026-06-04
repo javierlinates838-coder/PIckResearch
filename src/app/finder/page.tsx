@@ -40,6 +40,16 @@ export default async function FinderPage({
     }),
     getDfsSummary(),
   ]);
+  const displaySummary =
+    dfsSummary.source === "theoddsapi"
+      ? {
+          ...dfsSummary,
+          playerCount: new Set(opportunities.map((item) => item.player.id)).size,
+          propCount: opportunities.length,
+          sports: Array.from(new Set(opportunities.map((item) => item.sport))),
+          markets: Array.from(new Set(opportunities.map((item) => item.market))),
+        }
+      : dfsSummary;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -136,12 +146,17 @@ export default async function FinderPage({
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <Badge variant={dfsSummary.providerConfigured ? "positive" : "warning"}>
-              {dfsSummary.providerConfigured ? "DFS provider key detected" : "Demo DFS player pool"}
+              {displaySummary.source === "theoddsapi"
+                ? "Live OddsAPI prop lines"
+                : displaySummary.providerConfigured
+                  ? "DFS provider key detected"
+                  : "Demo DFS player pool"}
             </Badge>
             <p className="mt-3 text-sm leading-6 text-orange-50/85">
-              Your odds/news API keys do not populate Finder players. Finder needs a DFS
-              projections/stat-log provider. Current searchable pool: {dfsSummary.playerCount} demo
-              players and {dfsSummary.propCount} demo prop rows across {dfsSummary.sports.join(", ")}.
+              {displaySummary.source === "theoddsapi"
+                ? "Finder is requesting fresh event-level OddsAPI player-prop markets on every page load. Historical hit rates and stat logs still need a DFS/stat-log provider."
+                : "Finder needs a DFS projections/stat-log provider for full PickFinder-style coverage. Until then it uses the demo player pool."}{" "}
+              Current searchable pool: {displaySummary.playerCount} {displaySummary.source === "theoddsapi" ? "live/API-backed" : "demo"} players and {displaySummary.propCount} prop rows.
             </p>
           </div>
           <a
@@ -172,7 +187,7 @@ export default async function FinderPage({
           sort: filters.sort,
           minHitRate: filters.minHitRate,
         }}
-        dataSummary={dfsSummary}
+        dataSummary={displaySummary}
       />
     </div>
   );

@@ -7,7 +7,7 @@ import { Metric } from "@/components/ui/metric";
 import type { MarketType, PickApp, PickOpportunity, SportKey } from "@/types/sports";
 
 interface DfsDataSummary {
-  source: "demo";
+  source: "demo" | "theoddsapi";
   playerCount: number;
   propCount: number;
   sports: SportKey[];
@@ -32,6 +32,7 @@ const appOptions: PickApp[] = [
   "DraftKings",
   "FanDuel",
   "BetMGM",
+  "OddsAPI",
 ];
 
 function finderHref(params: Record<string, string | undefined>) {
@@ -302,11 +303,12 @@ export function PickFinderBoard({
         </div>
         {!opportunities.length ? (
           <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-5 text-sm text-slate-400">
-            No picks match these filters. Current demo coverage is {dataSummary.playerCount} players
-            across {dataSummary.sports.join(", ")} and markets{" "}
+            No picks match these filters. Current {dataSummary.source === "theoddsapi" ? "live OddsAPI" : "demo"} coverage is {dataSummary.playerCount} players
+            across {dataSummary.sports.join(", ") || "the selected live sport"} and markets{" "}
             {dataSummary.markets.map((market) => market.replace("player_", "").replaceAll("_", " ")).join(", ")}.
-            Connected odds/news APIs do not add Finder players; connect {dataSummary.expectedProviderKey}
-            or reset filters.
+            {dataSummary.source === "theoddsapi"
+              ? " If this is empty, OddsAPI did not return player-prop markets for the selected events or your quota/market settings need adjustment."
+              : ` Connect ${dataSummary.expectedProviderKey} or reset filters.`}
           </div>
         ) : null}
       </Card>

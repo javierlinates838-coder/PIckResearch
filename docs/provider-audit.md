@@ -5,7 +5,7 @@ This audit compares the current PickResearch provider integrations with the publ
 ## The Odds API
 
 ### Implemented
-- API key lookup through `THE_ODDS_API_KEY` with fallbacks.
+- API key lookup through `ODDSAPI`, `ODDSAPI_KEY`, `THE_ODDS_API_KEY`, and other fallbacks.
 - `/v4/sports/{sport}/odds` URL builder.
 - Sport-key mapping for NBA, MLB, NFL, NHL, tennis, soccer, and esports.
 - Region-based odds requests.
@@ -22,7 +22,10 @@ This audit compares the current PickResearch provider integrations with the publ
   - `x-requests-remaining`
   - `x-requests-used`
   - `x-requests-last`
-- Event-level player-prop URL builder for `/v4/sports/{sport}/events/{eventId}/odds`.
+- Event-level player-prop URL builder and fetcher for `/v4/sports/{sport}/events/{eventId}/odds`.
+- Finder live player-prop rows from The Odds API when an odds key is configured.
+- Fresh no-store requests on each page load.
+- `THE_ODDS_API_PLAYER_PROP_EVENT_LIMIT` to control player-prop quota usage.
 
 ### Important limitation
 The standard `/v4/sports/{sport}/odds` endpoint returns game-level markets such as `h2h`, `spreads`, `totals`, and `outrights`.
@@ -40,7 +43,7 @@ with player-prop market keys such as:
 - NHL: `player_shots_on_goal`, `player_goals`, `player_assists`
 - Soccer: `player_shots`, `player_shots_on_target`, `player_assists`
 
-The Odds API can help source sportsbook player-prop lines when event IDs and player markets are requested, but it does not provide historical player stat logs or DFS-style hit-rate calculations by itself.
+The Odds API now sources sportsbook player-prop lines in Finder when event IDs and player markets are available, but it does not provide historical player stat logs or DFS-style hit-rate calculations by itself.
 
 ## NewsAPI
 
@@ -81,4 +84,4 @@ Finder, Players, and Player Detail pages require:
 - Injury and matchup context.
 - Defense-vs-position tables.
 
-The current implementation uses a local demo DFS data layer and exposes `DFS_PROPS_API_KEY` as the intended provider hook. A production implementation should connect a DFS projections/stat-log provider or ingest this data into Supabase tables.
+The current implementation uses live Odds API player-prop lines when available and falls back to a local demo DFS data layer only when no odds key is configured. A production implementation should still connect a DFS projections/stat-log provider or ingest stat logs into Supabase for hit rates, DvP, and projections.

@@ -12,12 +12,16 @@ import {
 } from "@/lib/providers/newsapi";
 import {
   fetchTheOddsApiOdds,
+  fetchTheOddsApiPlayerProps,
   normalizeTheOddsApiGames,
   normalizeTheOddsApiOdds,
+  normalizeTheOddsApiPlayerProps,
 } from "@/lib/providers/the-odds-api";
 import type {
+  DfsPlayerResearch,
   DashboardData,
   DashboardDataMeta,
+  PickOpportunity,
   MarketType,
   NewsItem,
   NewsResearchData,
@@ -53,6 +57,118 @@ function compactProviderStatus(
 }
 
 type FinderSort = "edge" | "confidence" | "l10" | "diff" | "streak" | "newest";
+
+function searchableOpportunityText(item: PickOpportunity) {
+  return [
+    item.player.name,
+    item.player.position,
+    item.team.name,
+    item.team.abbreviation,
+    item.opponent.name,
+    item.opponent.abbreviation,
+    item.market,
+    item.market.replace("player_", "").replaceAll("_", " "),
+    item.app,
+    item.sportsbook,
+    item.side,
+    item.tags.join(" "),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function filterAndSortOpportunities(
+  opportunities: PickOpportunity[],
+  filters?: {
+    sport?: SportKey;
+    query?: string;
+    market?: MarketType;
+    app?: PickApp;
+    minHitRate?: number;
+    sort?: FinderSort;
+  },
+) {
+  const query = filters?.query?.toLowerCase();
+  const filtered = opportunities.filter((item) => {
+    const matchesSport = filters?.sport ? item.sport === filters.sport : true;
+    const matchesQuery = query ? searchableOpportunityText(item).includes(query) : true;
+    const matchesMarket = filters?.market ? item.market === filters.market : true;
+    const matchesApp = filters?.app ? item.app === filters.app : true;
+    const matchesHitRate = filters?.minHitRate ? item.l10HitRate >= filters.minHitRate : true;
+
+    return matchesSport && matchesQuery && matchesMarket && matchesApp && matchesHitRate;
+  });
+  const sort = filters?.sort ?? "edge";
+  const sorters = {
+    edge: (a: PickOpportunity, b: PickOpportunity) => b.edgeScore - a.edgeScore,
+    confidence: (a: PickOpportunity, b: PickOpportunity) => b.confidence - a.confidence,
+    l10: (a: PickOpportunity, b: PickOpportunity) => b.l10HitRate - a.l10HitRate,
+    diff: (a: PickOpportunity, b: PickOpportunity) => b.diff - a.diff,
+    streak: (a: PickOpportunity, b: PickOpportunity) => b.streak - a.streak,
+    newest: (a: PickOpportunity, b: PickOpportunity) => b.id.localeCompare(a.id),
+  } satisfies Record<FinderSort, (a: PickOpportunity, b: PickOpportunity) => number>;
+
+  return filtered.sort(sorters[sort]);
+}
+
+async function getLivePlayerProps(filters?: { sport?: SportKey; market?: MarketType }) {
+  if (!getProviderStatus().theOddsApi.configured) {
+    return {
+      data: null,
+      error: undefined,
+    };
+  }
+
+  try {
+    const result = await fetchTheOddsApiPlayerProps({
+      sport: filters?.sport,
+      markets: filters?.market,
+    });
+
+    return {
+      data: normalizeTheOddsApiPlayerProps(result.events),
+      error: result.diagnostics.errors.length ? result.diagnostics.errors.join("; ") : undefined,
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: errorMessage(error),
+    };
+  }
+}
+
+function liveResearchFromOpportunity(prop: PickOpportunity): DfsPlayerResearch {
+  return {
+    player: prop.player,
+    team: prop.team,
+    primaryMarket: prop.market,
+    currentLine: prop.line,
+    projection: prop.projection,
+    last5Average: 0,
+    last10Average: 0,
+    last15Average: 0,
+    seasonAverage: 0,
+    l5HitRate: 0,
+    l10HitRate: 0,
+    l15HitRate: 0,
+    seasonHitRate: 0,
+    streak: 0,
+    consistencyScore: 0,
+    usageTrendPct: 0,
+    minutesTrendPct: 0,
+    matchup: {
+      opponent: prop.opponent.name,
+      defenseVsPositionRank: 0,
+      note:
+        "Live OddsAPI player-prop line loaded. Add a DFS/stat-log provider to calculate DvP, hit rates, and game-log trends.",
+    },
+    injuryStatus: "monitor",
+    logs: [],
+    availableProps: [prop],
+    source: "theoddsapi",
+  };
+}
 
 async function getLiveOddsData(filters?: { sport?: SportKey }) {
   if (!getProviderStatus().theOddsApi.configured) {
@@ -203,6 +319,17 @@ export async function getDashboardResearch(filters?: { sport?: SportKey }): Prom
 }
 
 export async function listPlayers(filters?: { sport?: SportKey; query?: string }) {
+  if (getProviderStatus().theOddsApi.configured) {
+    const liveProps = await getLivePlayerProps({ sport: filters?.sport });
+    const opportunities = liveProps.data ?? [];
+    const uniquePlayers = Array.from(new Map(opportunities.map((item) => [item.player.id, item.player])).values());
+    const query = filters?.query?.toLowerCase();
+
+    return uniquePlayers.filter((player) =>
+      query ? `${player.name} ${player.position}`.toLowerCase().includes(query) : true,
+    );
+  }
+
   return listDfsPlayers(filters);
 }
 
@@ -214,6 +341,15 @@ export async function listPickOpportunities(filters?: {
   minHitRate?: number;
   sort?: FinderSort;
 }) {
+  if (getProviderStatus().theOddsApi.configured) {
+    const liveProps = await getLivePlayerProps({
+      sport: filters?.sport,
+      market: filters?.market,
+    });
+
+    return filterAndSortOpportunities(liveProps.data ?? [], filters);
+  }
+
   return listDfsOpportunities(filters);
 }
 
@@ -222,11 +358,35 @@ export async function getPlayerResearch(playerId: string) {
 }
 
 export async function getDfsResearch(playerId: string) {
-  return getDfsPlayerResearch(playerId);
+  const demoResearch = getDfsPlayerResearch(playerId);
+
+  if (demoResearch) {
+    return demoResearch;
+  }
+
+  if (getProviderStatus().theOddsApi.configured) {
+    const liveProps = await getLivePlayerProps();
+    const prop = liveProps.data?.find((item) => item.player.id === playerId);
+
+    return prop ? liveResearchFromOpportunity(prop) : null;
+  }
+
+  return null;
 }
 
 export async function getDfsSummary() {
-  return getDfsDataSummary();
+  const summary = getDfsDataSummary();
+
+  if (getProviderStatus().theOddsApi.configured) {
+    return {
+      ...summary,
+      source: "theoddsapi" as const,
+      providerConfigured: true,
+      expectedProviderKey: "ODDSAPI",
+    };
+  }
+
+  return summary;
 }
 
 export async function listTeams(filters?: { sport?: SportKey; query?: string }) {
