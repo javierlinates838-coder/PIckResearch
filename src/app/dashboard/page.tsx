@@ -28,7 +28,7 @@ export default async function DashboardPage({
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-300">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
             Research dashboard
           </p>
           <h1 className="mt-3 text-3xl font-black text-white sm:text-5xl">

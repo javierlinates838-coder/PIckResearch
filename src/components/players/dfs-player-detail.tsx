@@ -23,13 +23,13 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
     <div className="space-y-6">
       <a
         href="/finder"
-        className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-300 hover:text-emerald-200"
+        className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 hover:text-cyan-100"
       >
         <ArrowLeft className="size-4" />
         Back to Pick Finder
       </a>
 
-      <Card className="border-emerald-400/20 bg-emerald-500/5">
+      <Card className="overflow-hidden border-fuchsia-300/20 bg-gradient-to-br from-fuchsia-500/15 via-violet-500/10 to-cyan-400/10">
         <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
           <div>
             <div className="flex flex-wrap gap-2">
@@ -43,14 +43,14 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
             <p className="mt-2 text-slate-300">
               {research.player.position} - {research.team.abbreviation} - {marketLabel(research.primaryMarket)}
             </p>
-            <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-400">
+            <p className="mt-4 max-w-3xl text-sm leading-6 text-violet-50/75">
               {research.matchup.note}
             </p>
           </div>
-          <div className="rounded-3xl border border-white/10 bg-slate-950/70 p-5">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Current line</p>
+          <div className="rounded-3xl border border-cyan-200/20 bg-black/25 p-5 shadow-xl shadow-cyan-950/20">
+            <p className="text-xs uppercase tracking-[0.2em] text-cyan-100/60">Current line</p>
             <p className="mt-2 text-4xl font-black text-white">{research.currentLine}</p>
-            <p className="mt-1 text-sm text-emerald-200">Projection {research.projection}</p>
+            <p className="mt-1 text-sm text-cyan-100">Projection {research.projection}</p>
           </div>
         </div>
       </Card>
@@ -83,11 +83,11 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
                 <span className="text-slate-500">{formatDate(log.playedAt)}</span>
                 <div className="relative h-9 overflow-hidden rounded-full bg-slate-900">
                   <div
-                    className={`h-full rounded-full ${log.hit ? "bg-emerald-400" : "bg-slate-600"}`}
+                    className={`h-full rounded-full ${log.hit ? "bg-gradient-to-r from-cyan-300 to-fuchsia-300" : "bg-slate-600"}`}
                     style={{ width: `${Math.max(8, (log.value / maxValue) * 100)}%` }}
                   />
                   <div
-                    className="absolute top-0 h-full w-px bg-amber-300"
+                    className="absolute top-0 h-full w-px bg-white"
                     style={{ left: `${Math.min(98, (research.currentLine / maxValue) * 100)}%` }}
                   />
                 </div>
@@ -105,7 +105,7 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
           />
           <div className="space-y-3">
             {research.availableProps.map((prop) => (
-              <div key={prop.id} className="rounded-2xl bg-white/[0.03] p-4">
+              <div key={prop.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-semibold text-white">{prop.app}</p>
@@ -152,8 +152,8 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
                   <td className="py-3 text-slate-300">{log.line}</td>
                   <td className="py-3">
                     {log.hit ? (
-                      <span className="inline-flex items-center gap-2 text-emerald-300">
-                        <CheckCircle2 className="size-4" />
+                      <span className="inline-flex items-center gap-2 text-cyan-200">
+                        <CheckCircle2 className="size-4 text-cyan-200" />
                         Hit
                       </span>
                     ) : (
@@ -170,10 +170,10 @@ export function DfsPlayerDetail({ research }: { research: DfsPlayerResearch }) {
         </div>
       </Card>
 
-      <Card className="border-amber-400/20 bg-amber-500/10">
+      <Card className="border-fuchsia-300/20 bg-fuchsia-500/10">
         <div className="flex gap-3">
-          <Activity className="mt-1 size-5 text-amber-200" />
-          <p className="text-sm leading-6 text-amber-100">
+          <Activity className="mt-1 size-5 text-fuchsia-200" />
+          <p className="text-sm leading-6 text-fuchsia-50/80">
             This is a complete DFS prop research interface, but the rows are still demo data until a
             production DFS projections/stat-log provider is connected. The UI no longer pretends
             fake games are live or makes teams the center of the product.

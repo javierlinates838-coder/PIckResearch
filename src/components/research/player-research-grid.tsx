@@ -74,10 +74,10 @@ export function PlayerResearchGrid({
                 <h3 className="font-semibold text-white">Usage and minutes trends</h3>
                 <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
                   <p className="rounded-xl bg-slate-950/60 p-3 text-slate-300">
-                    Usage <span className="font-semibold text-emerald-200">+{item.usageTrendPct}%</span>
+                    Usage <span className="font-semibold text-cyan-200">+{item.usageTrendPct}%</span>
                   </p>
                   <p className="rounded-xl bg-slate-950/60 p-3 text-slate-300">
-                    Minutes <span className="font-semibold text-emerald-200">+{item.minutesTrendPct}%</span>
+                    Minutes <span className="font-semibold text-cyan-200">+{item.minutesTrendPct}%</span>
                   </p>
                 </div>
               </div>

@@ -57,7 +57,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
 
   return (
     <div className="space-y-6">
-      <Card className="border-emerald-400/20 bg-emerald-500/5">
+      <Card className="border-fuchsia-300/20 bg-fuchsia-500/10">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="flex flex-wrap gap-2">
@@ -98,7 +98,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
                 Odds quota remaining: {data.meta.providerStatus.theOddsApi.requestsRemaining}
               </p>
             ) : null}
-            <a className="mt-3 inline-block text-emerald-300 hover:text-emerald-200" href="/api/providers/status">
+            <a className="mt-3 inline-block text-cyan-200 hover:text-cyan-100" href="/api/providers/status">
               View provider status
             </a>
           </div>
@@ -106,7 +106,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
         {data.meta.warnings.length || data.meta.providerErrors.newsapi || data.meta.providerErrors.theOddsApi ? (
           <div className="mt-5 grid gap-3 lg:grid-cols-2">
             {data.meta.warnings.map((warning) => (
-              <p key={warning} className="rounded-2xl border border-amber-400/20 bg-amber-500/10 p-3 text-sm text-amber-100">
+              <p key={warning} className="rounded-2xl border border-fuchsia-300/20 bg-fuchsia-500/10 p-3 text-sm text-fuchsia-50/85">
                 {warning}
               </p>
             ))}
@@ -172,7 +172,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
                     {game.venue} - {formatTime(game.startsAt)}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-emerald-200">
+                <div className="flex items-center gap-2 text-sm text-cyan-200">
                   <Activity className="size-4" />
                   {game.sport.toUpperCase()}
                 </div>
@@ -258,11 +258,11 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
                     Tickets {split.publicTicketsPct}%
                   </p>
                   <p className="flex items-center gap-2 text-slate-300">
-                    <TrendingUp className="size-4 text-emerald-300" />
+                    <TrendingUp className="size-4 text-cyan-200" />
                     Money {split.publicMoneyPct}%
                   </p>
                 </div>
-                <p className="mt-3 text-sm text-emerald-200">
+                <p className="mt-3 text-sm text-cyan-200">
                   Sharp side: {split.sharpSide.toUpperCase()}
                 </p>
               </div>
@@ -300,7 +300,7 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
                     href={item.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 block font-semibold text-white hover:text-emerald-200"
+                    className="mt-3 block font-semibold text-white hover:text-cyan-200"
                   >
                     {item.title}
                   </a>

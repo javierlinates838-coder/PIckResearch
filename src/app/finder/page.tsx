@@ -41,7 +41,7 @@ export default async function FinderPage({
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-300">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-200">
             Pick Finder
           </p>
           <h1 className="mt-3 text-3xl font-black text-white sm:text-5xl">
@@ -70,7 +70,7 @@ export default async function FinderPage({
           ))}
           <a
             href="/finder?minHitRate=70"
-            className="rounded-full border border-emerald-300/30 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-500/10"
+            className="rounded-full border border-fuchsia-300/30 bg-fuchsia-400/10 px-3 py-2 text-sm text-fuchsia-100 hover:bg-fuchsia-400/20"
           >
             70%+ L10
           </a>
