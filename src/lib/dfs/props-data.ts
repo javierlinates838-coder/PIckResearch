@@ -336,6 +336,24 @@ function opportunityFor(seed: DfsSeed, app: PickApp = seed.app): PickOpportunity
   };
 }
 
+function searchableOpportunityText(item: PickOpportunity) {
+  return [
+    item.player.name,
+    item.player.position,
+    item.team.name,
+    item.team.abbreviation,
+    item.opponent.name,
+    item.opponent.abbreviation,
+    item.market,
+    item.market.replace("player_", "").replaceAll("_", " "),
+    item.app,
+    item.side,
+    item.tags.join(" "),
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
 export function listDfsOpportunities(filters?: {
   sport?: SportKey;
   query?: string;
@@ -354,7 +372,7 @@ export function listDfsOpportunities(filters?: {
     ])
     .filter((item) => {
       const matchesSport = filters?.sport ? item.sport === filters.sport : true;
-      const matchesQuery = query ? item.player.name.toLowerCase().includes(query) : true;
+      const matchesQuery = query ? searchableOpportunityText(item).includes(query) : true;
       const matchesMarket = filters?.market ? item.market === filters.market : true;
       const matchesApp = filters?.app ? item.app === filters.app : true;
       const matchesHitRate = filters?.minHitRate ? item.l10HitRate >= filters.minHitRate : true;
@@ -424,6 +442,36 @@ export function listDfsPlayers(filters?: { sport?: SportKey; query?: string }) {
 
   return seeds
     .filter((seed) => (filters?.sport ? seed.player.sport === filters.sport : true))
-    .filter((seed) => (query ? seed.player.name.toLowerCase().includes(query) : true))
+    .filter((seed) =>
+      query
+        ? [
+            seed.player.name,
+            seed.player.position,
+            seed.team.name,
+            seed.team.abbreviation,
+            seed.market,
+            seed.market.replace("player_", "").replaceAll("_", " "),
+            seed.app,
+          ]
+            .join(" ")
+            .toLowerCase()
+            .includes(query)
+        : true,
+    )
     .map((seed) => seed.player);
+}
+
+export function getDfsDataSummary() {
+  const sports = new Set(seeds.map((seed) => seed.player.sport));
+  const markets = new Set(seeds.map((seed) => seed.market));
+
+  return {
+    source: "demo" as const,
+    playerCount: seeds.length,
+    propCount: seeds.length * 2,
+    sports: Array.from(sports),
+    markets: Array.from(markets),
+    providerConfigured: Boolean(process.env.DFS_PROPS_API_KEY),
+    expectedProviderKey: "DFS_PROPS_API_KEY",
+  };
 }

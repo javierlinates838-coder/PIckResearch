@@ -38,9 +38,17 @@ interface FetchOddsOptions {
   sport?: SportKey;
   sportKey?: string;
   regions?: string;
+  bookmakers?: string;
   markets?: string;
   oddsFormat?: "american" | "decimal";
   dateFormat?: "iso" | "unix";
+  eventIds?: string;
+  commenceTimeFrom?: string;
+  commenceTimeTo?: string;
+  includeLinks?: "true" | "false";
+  includeSids?: "true" | "false";
+  includeBetLimits?: "true" | "false";
+  includeRotationNumbers?: "true" | "false";
 }
 
 export interface TheOddsApiDiagnostics {
@@ -112,10 +120,67 @@ export function buildTheOddsApiOddsUrl(sportKey: string, options?: FetchOddsOpti
   }
 
   url.searchParams.set("apiKey", apiKey);
-  url.searchParams.set("regions", options?.regions ?? status.regions);
+  const bookmakers = options?.bookmakers ?? status.bookmakers;
+  if (bookmakers) {
+    url.searchParams.set("bookmakers", bookmakers);
+  } else {
+    url.searchParams.set("regions", options?.regions ?? status.regions);
+  }
   url.searchParams.set("markets", options?.markets ?? status.markets);
   url.searchParams.set("oddsFormat", options?.oddsFormat ?? "american");
   url.searchParams.set("dateFormat", options?.dateFormat ?? "iso");
+  const optionalParams = {
+    eventIds: options?.eventIds ?? status.eventIds,
+    commenceTimeFrom: options?.commenceTimeFrom ?? status.commenceTimeFrom,
+    commenceTimeTo: options?.commenceTimeTo ?? status.commenceTimeTo,
+    includeLinks: options?.includeLinks ?? status.includeLinks,
+    includeSids: options?.includeSids ?? status.includeSids,
+    includeBetLimits: options?.includeBetLimits ?? status.includeBetLimits,
+    includeRotationNumbers: options?.includeRotationNumbers ?? status.includeRotationNumbers,
+  };
+
+  Object.entries(optionalParams).forEach(([key, value]) => {
+    if (value && value !== "false") {
+      url.searchParams.set(key, value);
+    }
+  });
+
+  return url;
+}
+
+export function buildTheOddsApiEventOddsUrl(
+  sportKey: string,
+  eventId: string,
+  options?: FetchOddsOptions,
+) {
+  const status = getProviderStatus().theOddsApi;
+  const url = new URL(`${status.baseUrl}/sports/${sportKey}/events/${eventId}/odds`);
+  const apiKey = getTheOddsApiKey();
+
+  if (!apiKey) {
+    throw new Error("Missing THE_ODDS_API_KEY or ODDS_API_KEY.");
+  }
+
+  url.searchParams.set("apiKey", apiKey);
+  const bookmakers = options?.bookmakers ?? status.bookmakers;
+  if (bookmakers) {
+    url.searchParams.set("bookmakers", bookmakers);
+  } else {
+    url.searchParams.set("regions", options?.regions ?? status.regions);
+  }
+  url.searchParams.set("markets", options?.markets ?? status.playerPropMarkets);
+  url.searchParams.set("oddsFormat", options?.oddsFormat ?? "american");
+  url.searchParams.set("dateFormat", options?.dateFormat ?? "iso");
+
+  if ((options?.includeLinks ?? status.includeLinks) === "true") {
+    url.searchParams.set("includeLinks", "true");
+  }
+  if ((options?.includeSids ?? status.includeSids) === "true") {
+    url.searchParams.set("includeSids", "true");
+  }
+  if ((options?.includeBetLimits ?? status.includeBetLimits) === "true") {
+    url.searchParams.set("includeBetLimits", "true");
+  }
 
   return url;
 }

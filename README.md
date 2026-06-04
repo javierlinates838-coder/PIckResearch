@@ -39,14 +39,32 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 THE_ODDS_API_KEY=
 THE_ODDS_API_REGIONS=us
+THE_ODDS_API_BOOKMAKERS=
 THE_ODDS_API_MARKETS=h2h,spreads,totals
+THE_ODDS_API_PLAYER_PROP_MARKETS=player_points,player_rebounds,player_assists,player_threes,player_shots_on_goal,batter_hits,batter_total_bases,pitcher_strikeouts
 THE_ODDS_API_ODDS_FORMAT=american
 THE_ODDS_API_DATE_FORMAT=iso
+THE_ODDS_API_EVENT_IDS=
+THE_ODDS_API_COMMENCE_TIME_FROM=
+THE_ODDS_API_COMMENCE_TIME_TO=
+THE_ODDS_API_INCLUDE_LINKS=false
+THE_ODDS_API_INCLUDE_SIDS=false
+THE_ODDS_API_INCLUDE_BET_LIMITS=false
+THE_ODDS_API_INCLUDE_ROTATION_NUMBERS=false
 NEWSAPI_API_KEY=
+NEWSAPI_ENDPOINT=everything
 NEWSAPI_LANGUAGE=en
 NEWSAPI_SORT_BY=publishedAt
 NEWSAPI_PAGE_SIZE=25
 NEWSAPI_QUERY=
+NEWSAPI_SEARCH_IN=
+NEWSAPI_SOURCES=
+NEWSAPI_DOMAINS=
+NEWSAPI_EXCLUDE_DOMAINS=
+NEWSAPI_FROM=
+NEWSAPI_TO=
+NEWSAPI_TOP_HEADLINES_COUNTRY=us
+NEWSAPI_TOP_HEADLINES_CATEGORY=sports
 AI_PROVIDER_API_KEY=
 ```
 
@@ -56,7 +74,10 @@ The app uses mock provider data for local development until live provider adapte
 ## Provider Integrations
 
 - The Odds API uses `/v4/sports/{sport}/odds` with `regions`, `markets`, `oddsFormat`, and `dateFormat`.
+- The Odds API also supports `bookmakers`, `eventIds`, `commenceTimeFrom`, `commenceTimeTo`, `includeLinks`, `includeSids`, `includeBetLimits`, and `includeRotationNumbers`.
+- The Odds API player props are not returned by the normal sport odds endpoint. They must be requested one event at a time from `/v4/sports/{sport}/events/{eventId}/odds` with player-prop market keys.
 - NewsAPI uses `/v2/everything` with provider-safe server-side `X-Api-Key` authentication.
+- NewsAPI also supports `top-headlines`, `searchIn`, `sources`, `domains`, `excludeDomains`, `from`, `to`, `language`, `sortBy`, `pageSize`, and `page`.
 - `GET /api/providers/status` reports whether provider keys are configured without exposing secrets.
 - Dashboard and news data prefer live provider data when keys are configured and fall back to mock data if keys are missing or providers are unavailable.
 
@@ -73,6 +94,8 @@ The app uses mock provider data for local development until live provider adapte
 | Team research metrics | De-emphasized | Team dashboards are not the primary product surface. |
 
 The dashboard displays source badges, provider warnings, and live/demo status so users can tell what is trustworthy live data versus placeholder research scaffolding.
+
+Important: `THE_ODDS_API_KEY` and `NEWSAPI_API_KEY` do not populate Finder players or DFS prop stat logs. They power dashboard odds/news only. To make `/finder`, `/players`, and `/players/[id]` live, connect and implement a DFS projections/stat-log provider via `DFS_PROPS_API_KEY` or a Supabase ingestion pipeline.
 
 ### Vercel Environment Variable Troubleshooting
 
@@ -103,6 +126,7 @@ psql "$SUPABASE_DATABASE_URL" -f supabase/schema.sql
 ```
 
 See `docs/architecture.md` for the complete architecture, API structure, folder structure, database design, security model, and deployment plan.
+See `docs/provider-audit.md` for the NewsAPI and The Odds API feature-by-feature audit.
 
 ## Scripts
 

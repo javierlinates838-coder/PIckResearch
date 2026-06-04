@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { supportedSports } from "@/config/sports";
-import { listPickOpportunities } from "@/lib/repositories/research";
+import { getDfsSummary, listPickOpportunities } from "@/lib/repositories/research";
 import { listQuerySchema } from "@/lib/validators/research";
 
 export const metadata: Metadata = {
@@ -25,11 +25,14 @@ export default async function PlayersPage({
     q: typeof params.q === "string" ? params.q : undefined,
   });
   const filters = parsed.success ? parsed.data : {};
-  const opportunities = await listPickOpportunities({
-    sport: filters.sport,
-    query: filters.q,
-    sort: "edge",
-  });
+  const [opportunities, dfsSummary] = await Promise.all([
+    listPickOpportunities({
+      sport: filters.sport,
+      query: filters.q,
+      sort: "edge",
+    }),
+    getDfsSummary(),
+  ]);
   const uniquePlayers = Array.from(
     new Map(opportunities.map((item) => [item.player.id, item])).values(),
   );
@@ -71,7 +74,8 @@ export default async function PlayersPage({
         <Badge variant="warning">Demo metrics</Badge>
         <p className="mt-3 text-sm leading-6 text-fuchsia-50/80">
           Player stat pages are functional and clickable now. The underlying rows remain demo
-          DFS props until a real projections/stat-log provider is connected.
+          DFS props until a real projections/stat-log provider is connected. Odds/news APIs do not
+          add players here. Current pool: {dfsSummary.playerCount} demo players.
         </p>
       </Card>
       <Card className="mb-6 border-cyan-300/20 bg-cyan-400/10">
@@ -145,6 +149,16 @@ export default async function PlayersPage({
             </div>
           </Link>
         ))}
+        {!uniquePlayers.length ? (
+          <Card className="md:col-span-2 xl:col-span-3">
+            <Badge variant="warning">No player found</Badge>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Search only covers the current demo DFS player pool: {dfsSummary.sports.join(", ")}.
+              Connected NewsAPI/The Odds API keys do not add DFS players. Connect{" "}
+              {dfsSummary.expectedProviderKey} or reset filters.
+            </p>
+          </Card>
+        ) : null}
       </div>
     </div>
   );
