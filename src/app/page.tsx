@@ -10,14 +10,15 @@ export default function HomePage() {
     <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
       <section className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
         <div className="space-y-8">
-          <Badge variant="positive">Production-ready sports intelligence</Badge>
+          <Badge variant="positive">Live-provider-ready sports intelligence</Badge>
           <div className="space-y-5">
             <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white sm:text-6xl">
               Research betting edges before the market fully prices them in.
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-slate-300">
-              PickResearch combines live odds, line movement, betting splits, injury news,
-              player props, team trends, and AI explanations in one modular Next.js platform.
+              PickResearch combines live odds and news provider adapters with clearly labeled
+              demo research modules for props, splits, trends, and AI workflows that need
+              additional production data feeds.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -42,7 +43,7 @@ export default function HomePage() {
             {
               icon: LineChart,
               title: "Market data",
-              text: "Odds, openers, movement, splits, and sharp-vs-public signals.",
+              text: "Live odds when The Odds API is configured, plus honest labels for unavailable splits and snapshot movement.",
             },
             {
               icon: BrainCircuit,

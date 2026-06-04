@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s | PickResearch",
   },
   description:
-    "Sports research platform for live odds, line movement, sharp indicators, player props, team trends, and AI betting analysis.",
+    "Sports research platform with live odds/news provider adapters, data-quality labels, player props, team trends, and AI betting analysis workflows.",
 };
 
 export default function RootLayout({

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import { TeamResearchGrid } from "@/components/research/team-research-grid";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { supportedSports } from "@/config/sports";
 import { getDashboardResearch, listTeams } from "@/lib/repositories/research";
 import { listQuerySchema } from "@/lib/validators/research";
@@ -8,6 +10,9 @@ import { listQuerySchema } from "@/lib/validators/research";
 export const metadata: Metadata = {
   title: "Team Research",
 };
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function TeamsPage({
   searchParams,
@@ -37,7 +42,7 @@ export default async function TeamsPage({
           </h1>
           <p className="mt-3 max-w-3xl text-slate-300">
             Analyze offensive ratings, defensive ratings, pace metrics, recent form, and
-            injury-adjusted team trends before evaluating game and prop markets.
+            injury-adjusted team trends once a production stats feed is connected.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -58,6 +63,14 @@ export default async function TeamsPage({
           ))}
         </div>
       </div>
+      <Card className="mb-6 border-amber-400/20 bg-amber-500/10">
+        <Badge variant="warning">Demo metrics</Badge>
+        <p className="mt-3 text-sm leading-6 text-amber-100">
+          Team ratings, pace, form, net-rating trends, and injury impact are demo research
+          data right now. Connect a stats provider or scheduled Supabase ingestion before
+          treating these as verified live team metrics.
+        </p>
+      </Card>
       <TeamResearchGrid teams={teams} trends={dashboard.teamTrends} />
     </div>
   );

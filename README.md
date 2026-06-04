@@ -12,7 +12,7 @@ Production-ready sports research platform for finding betting edges and player p
 
 ## Features
 
-- Research dashboard with odds, line movement, public splits, sharp indicators, news, and games
+- Research dashboard with provider-backed odds/news, data-quality labels, provider warnings, and demo fallbacks
 - Player research with last 5/10/season averages, splits, trends, consistency, hit rates, and matchup notes
 - Team research with ratings, pace, recent form, trends, and injury impact
 - News engine for injuries, suspensions, lineups, coaching, transactions, and general alerts
@@ -59,6 +59,19 @@ The app uses mock provider data for local development until live provider adapte
 - NewsAPI uses `/v2/everything` with provider-safe server-side `X-Api-Key` authentication.
 - `GET /api/providers/status` reports whether provider keys are configured without exposing secrets.
 - Dashboard and news data prefer live provider data when keys are configured and fall back to mock data if keys are missing or providers are unavailable.
+
+## Data Source Maturity
+
+| Module | Current source | Notes |
+| --- | --- | --- |
+| Games | The Odds API or demo fallback | Live when `THE_ODDS_API_KEY` is configured. |
+| Odds | The Odds API or demo fallback | Live latest prices. Historical movement needs persisted snapshots. |
+| News | NewsAPI or demo fallback | Live when `NEWSAPI_API_KEY` is configured. |
+| Public betting splits | Not live yet | Requires a dedicated splits provider or ingestion table. |
+| Player research metrics | Demo metrics | Requires stats/props provider ingestion before real betting use. |
+| Team research metrics | Demo metrics | Requires stats provider ingestion before real betting use. |
+
+The dashboard displays source badges, provider warnings, and live/demo status so users can tell what is trustworthy live data versus placeholder research scaffolding.
 
 ### Vercel Environment Variable Troubleshooting
 

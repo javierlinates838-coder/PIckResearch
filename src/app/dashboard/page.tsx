@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   title: "Research Dashboard",
 };
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function DashboardPage({
   searchParams,
 }: {
@@ -29,11 +32,11 @@ export default async function DashboardPage({
             Research dashboard
           </p>
           <h1 className="mt-3 text-3xl font-black text-white sm:text-5xl">
-            Live market command center
+            Live market and data-quality command center
           </h1>
           <p className="mt-3 max-w-3xl text-slate-300">
-            Track live odds, line movement, public betting percentages, sharp indicators,
-            injury news, and upcoming games from a single research surface.
+            Track live odds and news when providers are configured, while clearly labeling
+            demo-only sections that still need splits, stats, or snapshot ingestion.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

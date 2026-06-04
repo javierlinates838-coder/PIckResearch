@@ -3,12 +3,15 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
 import { supportedSports } from "@/config/sports";
-import { listNews } from "@/lib/repositories/research";
+import { getNewsResearch } from "@/lib/repositories/research";
 import { newsQuerySchema } from "@/lib/validators/research";
 
 export const metadata: Metadata = {
   title: "News Engine",
 };
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function formatTime(value: string) {
   return new Intl.DateTimeFormat("en", {
@@ -31,7 +34,8 @@ export default async function NewsPage({
     type: typeof params.type === "string" ? params.type : undefined,
   });
   const filters = parsed.success ? parsed.data : {};
-  const items = await listNews(filters);
+  const news = await getNewsResearch(filters);
+  const sourceLabel = news.meta.source === "newsapi" ? "Live: NewsAPI" : "Demo data";
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -67,14 +71,46 @@ export default async function NewsPage({
         </div>
       </div>
 
+      <Card className="mb-6 border-emerald-400/20 bg-emerald-500/5">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <Badge variant={news.meta.source === "newsapi" ? "positive" : "neutral"}>
+              {sourceLabel}
+            </Badge>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Fetched {formatTime(news.meta.fetchedAt)}. NewsAPI key:{" "}
+              {news.meta.providerStatus.detectedAlias ??
+                (news.meta.providerStatus.configured ? "configured" : "missing")}
+            </p>
+          </div>
+          <a className="text-sm font-semibold text-emerald-300 hover:text-emerald-200" href="/api/providers/status">
+            Provider status
+          </a>
+        </div>
+        {news.meta.warnings.length || news.meta.providerError ? (
+          <div className="mt-4 grid gap-3 lg:grid-cols-2">
+            {news.meta.warnings.map((warning) => (
+              <p key={warning} className="rounded-2xl border border-amber-400/20 bg-amber-500/10 p-3 text-sm text-amber-100">
+                {warning}
+              </p>
+            ))}
+            {news.meta.providerError ? (
+              <p className="rounded-2xl border border-rose-400/20 bg-rose-500/10 p-3 text-sm text-rose-100">
+                NewsAPI error: {news.meta.providerError}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+      </Card>
+
       <Card>
         <CardHeader
-          eyebrow="Aggregated feed"
+          eyebrow={sourceLabel}
           title="Latest market-impact news"
           description="Each item is tagged by sport, severity, source, and event type."
         />
         <div className="grid gap-4 md:grid-cols-2">
-          {items.map((item) => (
+          {news.items.length ? news.items.map((item) => (
             <article key={item.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="info">{item.sport.toUpperCase()}</Badge>
@@ -91,13 +127,28 @@ export default async function NewsPage({
                 </Badge>
                 <Badge>{item.type}</Badge>
               </div>
-              <h2 className="mt-4 text-xl font-semibold text-white">{item.title}</h2>
+              {item.url ? (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 block text-xl font-semibold text-white hover:text-emerald-200"
+                >
+                  {item.title}
+                </a>
+              ) : (
+                <h2 className="mt-4 text-xl font-semibold text-white">{item.title}</h2>
+              )}
               <p className="mt-2 leading-7 text-slate-400">{item.summary}</p>
               <p className="mt-4 text-sm text-slate-500">
                 {item.source} - {formatTime(item.publishedAt)}
               </p>
             </article>
-          ))}
+          )) : (
+            <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-5 text-sm leading-6 text-slate-400 md:col-span-2">
+              No articles returned for this filter. Adjust the NewsAPI query, language, or page size settings.
+            </div>
+          )}
         </div>
       </Card>
     </div>
